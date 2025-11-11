@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar } from "@/components/layout/updatedSidebar";
+import { Sidebar } from "@/components/layout/productSidebar";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

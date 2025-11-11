@@ -66,6 +66,12 @@ import ManagePujaForms from "./components/dashboard/manageParticipateBooking";
 import ViewPujaForm from "./pages/viewPujaForm";
 import EditPujaForm from "./pages/EditParticipatePujaForm";
 import { ParticipatedViewPujaDrafts } from "./pages/participatePujaFormDraft";
+import ProductDashboard from "./components/dashboard/product/productDashboard";
+import ManageProductOrders from "./components/dashboard/ManageProductOrders";
+import GemstoneForm from "./components/dashboard/GemstoneForm";
+import { ManageGemstone } from "./components/dashboard/ManageGemstone";
+import { ProductRevenueCalendar } from "./pages/productRevenueCalender";
+
 
 const queryClient = new QueryClient();
 
@@ -118,6 +124,10 @@ const App = () => (
             path="/dashboard/total-revenue"
             element={<RevenueCalendar />}
           />
+          <Route
+            path="/dashboard/total-product-revenue"
+            element={<ProductRevenueCalendar />}
+          />
           {/*  */}
           <Route path="/categories/view/:id" element={<ViewCategory />} />
           <Route path="/categories/edit/:id" element={<EditCategory />} />
@@ -128,7 +138,9 @@ const App = () => (
           <Route path="/rudraksha/edit/:id" element={<EditRudraksha />} />
           <Route path="/dashboard/add-bracelet" element={<AddBracelet />} />
           <Route path="/dashboard/add-category" element={<CategoryForm />} />
+          <Route path="/dashboard/add-gemstone" element={<GemstoneForm />} />
           <Route path="/dashboard/manage" element={<ManagePujas />} />
+          <Route path="/dashboard/manage-gemstones" element={<ManageGemstone />} />
 
           {/*  */}
 
@@ -183,16 +195,10 @@ const App = () => (
             element={<ManageUpcomingPujas />}
           />
           <Route path="/dashboard/upload" element={<UploadData />} />
-          {/* <Route path="/categories/edit/:id" element={<EditCategory />} /> */}
-          {/* <Route path="/categories/edit/:id" element={<EditCategory />} /> */}
-          {/* <Route path="/categories/edit/:id" element={<EditCategory />} /> */}
-          {/* <Route path="/categories/edit/:id" element={<EditCategory />} /> */}
-          {/* <Route path="/categories/edit/:id" element={<EditCategory />} /> */}
-          {/* <Route path="/addnewpuja" element={<PujaForm />} />
-          <Route path="/addnewcategory" element={<CategoryForm />} />
-          <Route path="/managepuja" element={<ManagePujas />} />
-          <Route path="/managebooking" element={<ManageBookings />} />
-          <Route path="/managecategory" element={<ManageCategories />} /> */}
+          {/* product section */}
+          {/* {/* <Route path="/dashboard/product" element={<ProductDashboard/>} /> */}
+          <Route path="/dashboard/product" element={<ProductDashboard/>} /> 
+          <Route path="/dashboard/manage-product-orders" element={<ManageProductOrders/>} /> 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

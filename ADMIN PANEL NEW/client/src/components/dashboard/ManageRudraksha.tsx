@@ -31,7 +31,7 @@ import {
   Gem,
   Menu,
 } from "lucide-react";
-import { Sidebar } from "@/components/layout/updatedSidebar"; // ✅ Make sure you have this component
+import { Sidebar } from "@/components/layout/productSidebar"; // ✅ Make sure you have this component
 
 export function ManageRudraksha() {
   const [rudraksha, setRudraksha] = useState<any[]>([]);

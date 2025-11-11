@@ -54,6 +54,10 @@ app.use(
   "/api/participate/bookings",
   require("./routes/participateBookingRoutes")
 );
+
+// product section 
+
+
 // ----------------- CRON JOB -----------------
 require("./scheduler/reminderJob"); //  start the reminder job
 

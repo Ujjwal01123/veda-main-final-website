@@ -31,7 +31,7 @@ import {
   Gem,
   Menu,
 } from "lucide-react";
-import { Sidebar } from "@/components/layout/updatedSidebar"; // ✅ Import your Sidebar component
+import { Sidebar } from "@/components/layout/productSidebar"; // ✅ Import your Sidebar component
 
 export function ManageBracelets() {
   const [bracelets, setBracelets] = useState<any[]>([]);

@@ -42,10 +42,19 @@ export function ManageUpcomingPujas() {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_BASE_API_URL;
 
+
+
+
   useEffect(() => {
     axios
-      .get(`${apiUrl}/api/pujas/upcomingPuja`)
-      .then((res) => setPujas(res.data || []))
+      .get(`${apiUrl}/api/pujas/all`)
+      .then((res) => {
+        // Filter pujas where category name = "Upcoming Festival Puja"
+        const upcoming = res.data.filter(
+          (puja) => puja.category?.name === "Upcoming Festival Puja"
+        );
+        setPujas(upcoming || [])}
+      )
       .catch(() =>
         toast({
           title: "Error",
@@ -169,8 +178,8 @@ export function ManageUpcomingPujas() {
                   <TableRow className="bg-gradient-to-r from-spiritual/5 to-accent/5 border-b border-border/30">
                     <TableHead>Title</TableHead>
                     <TableHead>Category</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Significance</TableHead>
+                    {/* <TableHead>Date</TableHead> */}
+                    {/* <TableHead>Significance</TableHead> */}
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -196,12 +205,12 @@ export function ManageUpcomingPujas() {
                         <TableCell className="text-muted-foreground">
                           {puja.category?.name || "—"}
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
+                        {/* <TableCell className="text-muted-foreground">
                           {new Date(puja.date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground truncate max-w-xs">
+                        </TableCell> */}
+                        {/* <TableCell className="text-muted-foreground truncate max-w-xs">
                           {puja.significance}
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell className="text-right">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

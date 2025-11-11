@@ -126,7 +126,8 @@ export type DashboardSection =
   | "active"
   | "cancel"
   | "manage-upcoming"
-  | "reminder";
+  | "reminder"
+  | "product-dashboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -221,7 +222,7 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
   const [totalDevotee, settotalDevotee] = useState(0);
   const [monthRevenue, setmonthRevenue] = useState(0);
   const [recentPuja, setrecentPuja] = useState<any[]>([]);
-  const [recentOrders, setrecentOrders] = useState<any[]>([]); // 🆕 Added
+  const [recentUpcoming, setupcoming] = useState<any[]>([]); // 🆕 Added
   const [TotalBracelet, setTotalBracelet] = useState(0); // 🆕 Added
   const [TotalOrders, setTotalOrders] = useState(0); // 🆕 Added
   const [TotalBlogs, setTotalBlogs] = useState(0); // 🆕 Added
@@ -266,9 +267,19 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
       .catch(console.error);
 
     axios
-      .get(`${apiUrl}/api/pujas/upcomingPuja`)
-      .then((res) => setupcomingPujas(res.data.length))
-      .catch(console.error);
+      .get(`${apiUrl}/api/pujas/all`)
+      .then((res) => {
+        // Filter pujas where category name = "Upcoming Festival Puja"
+        const upcoming = res.data.filter(
+          (puja) => puja.category?.name === "Upcoming Festival Puja"
+        );
+
+        // console.log(upcoming); // shows filtered pujas
+        setupcomingPujas(upcoming.length); // count of matching pujas
+      })
+      .catch((err) => {
+        console.error("Error fetching pujas:", err);
+      });
 
     axios
       .get(`${apiUrl}/api/bookings/totaldevotees`)
@@ -324,7 +335,7 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
           (a: any, b: any) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        setrecentOrders(sortedOrders.slice(0, 3));
+        setupcoming(sortedOrders.slice(0, 3));
       })
       .catch(console.error);
   }, []);
@@ -375,15 +386,15 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
               className="flex-1 sm:flex-none bg-white text-saffron hover:bg-white/90 shadow-lg"
               onClick={() => onSectionChange("add-category")}
             >
-              <Plus className="w-4 h-4 mr-2" /> Add New Categories
+              <Plus className="w-4 h-4 mr-2" /> Add Puja Categories
             </Button>
 
-            <Button
+            {/* <Button
               className="flex-1 sm:flex-none bg-white text-saffron hover:bg-white/90 shadow-lg"
               onClick={() => onSectionChange("add-rudraksha")}
             >
               <Plus className="w-4 h-4 mr-2" /> Add New Rudraksha
-            </Button>
+            </Button> */}
 
             {/* <Button
               className="flex-1 sm:flex-none bg-white text-saffron hover:bg-white/90 shadow-lg"
@@ -392,12 +403,12 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
               <Plus className="w-4 h-4 mr-2" /> Add New Blog
             </Button> */}
 
-            <Button
+            {/* <Button
               className="flex-1 sm:flex-none bg-white text-saffron hover:bg-white/90 shadow-lg"
               onClick={() => onSectionChange("add-bracelet")}
             >
               <Plus className="w-4 h-4 mr-2" /> Add New Bracelets
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
@@ -468,7 +479,7 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
           />
         </div>
         {/*  */}
-        <div
+        {/* <div
           onClick={() => onSectionChange("manage-rudraksha")}
           className="cursor-pointer"
         >
@@ -477,14 +488,14 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
             value={totalRudraksha}
             icon={Flower}
           />
-        </div>
+        </div> */}
         <div
           onClick={() => onSectionChange("manage-blogs")}
           className="cursor-pointer"
         >
           <StatsCard title="Total Blogs" value={TotalBlogs} icon={Flower} />
         </div>
-        <div
+        {/* <div
           onClick={() => onSectionChange("manage-bracelets")}
           className="cursor-pointer"
         >
@@ -493,7 +504,7 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
             value={TotalBracelet}
             icon={Flower}
           />
-        </div>
+        </div> */}
         {/* <div
           onClick={() => onSectionChange("manage-orders")}
           className="cursor-pointer"
@@ -513,7 +524,7 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
       </div>
 
       {/* Quick Actions + Recent Pujas + Recent Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Quick Actions */}
         <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader>
@@ -535,20 +546,20 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
               <Plus className="w-4 h-4" /> Add New Categories
             </Button>
             {/* new */}
-            <Button
+            {/* <Button
               variant="outline"
               className="w-full justify-start gap-3"
               onClick={() => onSectionChange("add-rudraksha")}
             >
               <Plus className="w-4 h-4" /> Add New Rudraksha
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="outline"
               className="w-full justify-start gap-3"
               onClick={() => onSectionChange("add-bracelet")}
             >
               <Plus className="w-4 h-4" /> Add New Bracelet
-            </Button>
+            </Button> */}
             {/* new line end */}
             <Button
               variant="outline"
@@ -572,27 +583,27 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
               <List className="w-4 h-4" /> Manage Categories
             </Button>
             {/* new */}
-            <Button
+            {/* <Button
               variant="outline"
               className="w-full justify-start gap-3"
               onClick={() => onSectionChange("manage-orders")}
             >
               <List className="w-4 h-4" /> Manage Orders
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="outline"
               className="w-full justify-start gap-3"
               onClick={() => onSectionChange("manage-rudraksha")}
             >
               <List className="w-4 h-4" /> Manage Rudraksha
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="outline"
               className="w-full justify-start gap-3"
               onClick={() => onSectionChange("manage-bracelets")}
             >
               <List className="w-4 h-4" /> Manage Bracelets
-            </Button>
+            </Button> */}
             {/* new line end */}
             <Button
               variant="outline"
@@ -607,17 +618,17 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
         {/* Recent Pujas */}
         <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader>
-            <CardTitle>Recent Pujas</CardTitle>
+            <CardTitle>Newly Added Pujas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {recentPuja.map((puja) => {
-              const today = new Date();
-              const pujaDate = new Date(puja.date);
-              const status = pujaDate >= today ? "Upcoming" : "Completed";
-              const statusClass =
-                status === "Upcoming"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-700";
+              // const today = new Date();
+              // const pujaDate = new Date(puja.date);
+              // const status = pujaDate >= today ? "Upcoming" : "Completed";
+              // const statusClass =
+              //   status === "Upcoming"
+              //     ? "bg-green-100 text-green-700"
+              //     : "bg-gray-100 text-gray-700";
 
               return (
                 <div
@@ -631,16 +642,16 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
                     <p className="text-sm text-muted-foreground">
                       {puja.category?.name}
                     </p>
-                    <p className="text-sm font-medium text-saffron">
+                    {/* <p className="text-sm font-medium text-saffron">
                       {pujaDate.toLocaleDateString()}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span
+                    {/* <span
                       className={`px-2 py-1 text-xs rounded-full ${statusClass}`}
                     >
                       {status}
-                    </span>
+                    </span> */}
                     <div className="flex gap-1">
                       <Button
                         variant="ghost"
@@ -673,13 +684,13 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
         </Card>
 
         {/* 🆕 Recent Orders */}
-        <Card className="bg-gradient-card border-border shadow-card">
+        {/* <Card className="bg-gradient-card border-border shadow-card">
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
+            <CardTitle>Recent Upcoming Pujas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {recentOrders.length > 0 ? (
-              recentOrders.map((order) => (
+            {recentUpcoming.length > 0 ? (
+              recentUpcoming.map((order) => (
                 <div
                   key={order._id}
                   className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-border"
@@ -710,11 +721,11 @@ const DashboardHome = ({ onSectionChange }: DashboardHomeProps) => {
               ))
             ) : (
               <p className="text-muted-foreground text-sm">
-                No recent orders found
+                Upcoming pujas
               </p>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

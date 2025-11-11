@@ -10,7 +10,7 @@ import { Plus, Save, Upload, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import TiptapEditor from "@/components/dashboard/TipTapEditor";
-import { Sidebar } from "@/components/layout/updatedSidebar";
+import { Sidebar } from "@/components/layout/productSidebar";
 
 interface RudrakshaData {
   _id: string;
