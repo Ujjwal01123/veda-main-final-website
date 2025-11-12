@@ -59,7 +59,7 @@ function PujaCard({ puja }) {
     const endsInDays = useMemo(() => Math.floor(2 + Math.random() * 10), [])
 
     // Determine the link based on puja type
-    const link = puja.category.name === "Upcoming Festival Puja" ? `/yagya-puja/participate/${puja._id}` : `/yagya-puja/${puja._id}`
+    const link = puja.category.name === "Upcoming Special Festival Puja" ? `/yagya-puja/participate/${puja._id}` : `/yagya-puja/${puja._id}`
 
     return (
         <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
@@ -74,7 +74,7 @@ function PujaCard({ puja }) {
                         e.target.src = "https://placehold.co/600x400/FFF3D7/805A2A?text=Image+Not+Found"
                     }}
                 />
-                {puja.category.name === "Upcoming Festival Puja" && (
+                {puja.category.name === "Upcoming Special Festival Puja" && (
                     <div className="absolute top-3 left-3 flex items-center rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-red-600 shadow-md backdrop-blur-sm">
                         <ClockIcon /> Ends in {endsInDays} days
                     </div>
@@ -88,7 +88,7 @@ function PujaCard({ puja }) {
                 <div className="mt-auto">
                     <Link href={link}>
                         <button className="w-full transform rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-3 font-bold text-white shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-lg">
-                            {puja.category.name === "Upcoming Festival Puja" ? "Participate Now" : "Book Now"}
+                            {puja.category.name === "Upcoming Special Festival Puja" ? "Participate Now" : "Book Now"}
                         </button>
                     </Link>
                 </div>
@@ -124,7 +124,7 @@ export default function Filter() {
     const upcomingPujas = puja.filter((p) => p.category.name === "Upcoming Special Festival Puja" && p.title.toLowerCase().includes(search.toLowerCase())).slice(0, 3)
 
     const otherPujas = puja.filter((p) => {
-        if (p.category.name === "Upcoming Festival Puja") return false
+        if (p.category.name === "Upcoming Special Festival Puja") return false
         const matchFilter = filter === "all" || p.category.name === filter
         const matchSearch = p.title.toLowerCase().includes(search.toLowerCase())
         return matchFilter && matchSearch
@@ -190,7 +190,7 @@ export default function Filter() {
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4">
                             {displayedOtherPujas.length > 0
                                 ? displayedOtherPujas.map((puja) => <PujaCard key={puja.id} puja={puja} />)
-                                : filter !== "Upcoming Festival Puja" && (
+                                : filter !== "Upcoming Special Festival Puja" && (
                                       <div className="col-span-full flex h-96 flex-col items-center justify-center rounded-2xl bg-white shadow-md">
                                           <p className="text-xl font-semibold text-gray-700">No Pujas Found</p>
                                           <p className="mt-2 text-gray-500">Please try adjusting your search or filter.</p>
@@ -210,7 +210,7 @@ export default function Filter() {
                         )}
 
                         {/* NEW "Embrace the Festive Spirit" Section */}
-                        {(filter === "all" || filter === "Upcoming Festival Puja") && upcomingPujas.length > 0 && (
+                        {(filter === "all" || filter === "Upcoming Special Festival Puja") && upcomingPujas.length > 0 && (
                             <div className="mt-16 rounded-3xl border border-amber-200/60 bg-amber-50/50 p-6 sm:p-8 lg:p-12">
                                 <div className="mb-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
                                     {/* Left Column */}
