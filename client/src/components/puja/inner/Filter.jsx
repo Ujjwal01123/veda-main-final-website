@@ -6,7 +6,7 @@ import Link from "next/link"
 import usePuja from "@/hooks/usePuja"
 import { getAllCategories } from "@/apis/controllers/categoriesController"
 
-const serverUrl = "http://localhost:5000"
+const serverUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 
 // Data
 

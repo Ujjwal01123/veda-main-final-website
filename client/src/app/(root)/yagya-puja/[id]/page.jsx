@@ -251,7 +251,7 @@ const Carddetails = () => {
             try {
                 const response = await axios.get(`${apiUrl}/pujas/all`)
                 const allPujas = response.data // ✅ use .data
-                console.log("All Pujas:", allPujas)
+                // console.log("All Pujas:", allPujas)
 
                 // ✅ Filter pujas that share the same category name
                 const filtered = allPujas.filter((p) => p.category?.name === pujaData.category.name && p._id !== pujaData._id)
@@ -263,7 +263,7 @@ const Carddetails = () => {
                     price: p.price ? `₹${p.price}` : "—",
                     img: p.image ? `${imgUrl}${p.image}` : "localhost:5000/images/default-puja.jpg",
                 }))
-                console.log("Related Pujas:", formatted)
+                // console.log("Related Pujas:", formatted)
 
                 setRelatedPujas(formatted)
             } catch (error) {

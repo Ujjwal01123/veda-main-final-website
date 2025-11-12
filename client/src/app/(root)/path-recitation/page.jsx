@@ -70,7 +70,7 @@ function Path() {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const pathData = res.data.filter((item) => item.category.name === "Path | Recitation")
-                console.log("Fetched path data:", pathData)
+                // console.log("Fetched path data:", pathData)
                 setpaths(pathData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)

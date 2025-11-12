@@ -185,7 +185,7 @@ const Japa = () => {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const japaData = res.data.filter((item) => item.category.name === "Japa | Chanting")
-                console.log("Fetched japa data:", japaData)
+                // console.log("Fetched japa data:", japaData)
                 setJapas(japaData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)

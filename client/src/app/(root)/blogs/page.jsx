@@ -53,7 +53,7 @@ export default function BlogPage() {
     }
 
     const cleanBaseUrl = getBaseUrl(apiUrl)
-    console.log("API URL:", cleanBaseUrl)
+    // console.log("API URL:", cleanBaseUrl)
 
     return (
         <div className="mx-auto max-w-7xl p-6">

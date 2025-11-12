@@ -82,7 +82,7 @@ const SimplePuja = () => {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const pujaData = res.data.filter((item) => item.category.name === "Vedic Puja")
-                console.log("Fetched nitya data:", pujaData)
+                // console.log("Fetched nitya data:", pujaData)
                 setPujas(pujaData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)

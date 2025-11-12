@@ -160,8 +160,15 @@ export default function EditBlogForm() {
                 {/* TipTap Editor */}
                 <div className="space-y-2">
                   <Label>Blog Content</Label>
-                  <TiptapEditor
+                  {/* <TiptapEditor
                     key={id}
+                    value={formData.content}
+                    onChange={(val) =>
+                      setFormData({ ...formData, content: val })
+                    }
+                  /> */}
+                  <TiptapEditor
+                    key={`${id}-${formData.content?.length}`}
                     value={formData.content}
                     onChange={(val) =>
                       setFormData({ ...formData, content: val })

@@ -28,7 +28,7 @@ const App = () => {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const yagyaData = res.data.filter((item) => item.category.name === "Vedic Yagya")
-                console.log("Fetched nitya data:", yagyaData)
+                // console.log("Fetched nitya data:", yagyaData)
                 setYagyas(yagyaData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)

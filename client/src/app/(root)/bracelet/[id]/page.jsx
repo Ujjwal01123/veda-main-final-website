@@ -57,7 +57,7 @@ function ProductDetails() {
             if (res?.data?.bracelet) setProduct(res.data.bracelet)
             else setProduct(res?.data || {})
         } catch (err) {
-            console.error("Error fetching bracelet:", err)
+            // console.error("Error fetching bracelet:", err)
             toast.error("Failed to load product")
         }
     }

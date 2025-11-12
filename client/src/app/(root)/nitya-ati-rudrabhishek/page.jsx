@@ -16,7 +16,7 @@ const NityaAti = () => {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const nityaData = res.data.filter((item) => item.category.name === "Nitya Ati Rudrabhishek")
-                console.log("Fetched nitya data:", nityaData)
+                // console.log("Fetched nitya data:", nityaData)
                 setNityas(nityaData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)

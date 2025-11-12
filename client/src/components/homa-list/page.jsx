@@ -23,7 +23,7 @@ const NityaAtiRudrabhishek = () => {
         const nityaData = res.data.filter(
           (item) => item.category?.name === "Homa | Havan"
         );
-        console.log("Fetched nitya data:", nityaData);
+        // console.log("Fetched nitya data:", nityaData);
         setNityas(nityaData);
       } catch (error) {
         console.error("Error fetching Nitya Ati Rudrabhishek data:", error);

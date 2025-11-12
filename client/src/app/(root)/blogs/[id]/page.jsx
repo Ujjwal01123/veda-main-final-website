@@ -28,7 +28,7 @@ export default function BlogDetail({ params }) {
 
     // ✅ Base API URL (for local images)
     const apiUrl = process.env.NEXT_PUBLIC_BASE_API_URL || "localhost:5000/api"
-    console.log("API URL:", apiUrl)
+    // console.log("API URL:", apiUrl)
 
     const getFullImageUrl = (path = "") => {
         if (!path) return ""

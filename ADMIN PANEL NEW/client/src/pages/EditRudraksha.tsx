@@ -61,20 +61,102 @@ export default function EditRudraksha() {
     youtubeLink: "",
   });
 
-  const normalizeHtml = (value: any): string => {
-    if (!value) return "";
-    if (Array.isArray(value)) return value[0] || "";
-    if (typeof value === "string") {
-      try {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) return parsed[0] || "";
-        return parsed;
-      } catch {
-        return value;
+  
+//   const normalizeHtml = (value: any): string => {
+//   if (!value) return "";
+
+//   let html = value;
+
+//   // Case 1: If it’s an array (most common in your API)
+//   if (Array.isArray(html)) {
+//     html = html[0]; // take first element
+//   }
+
+//   // Case 2: Try to parse JSON safely (handles nested "[\"<p>...</p>\"]")
+//   if (typeof html === "string") {
+//     try {
+//       const parsed = JSON.parse(html);
+
+//       // parsed could again be array or string
+//       if (Array.isArray(parsed)) {
+//         html = parsed[0] || "";
+//       } else if (typeof parsed === "string") {
+//         html = parsed;
+//       }
+//     } catch {
+//       // If not JSON, clean outer brackets manually if present
+//       html = html.replace(/^\[|\]$/g, "").trim();
+//     }
+//   }
+
+//   return html;
+// };
+const normalizeHtml = (value: any): string => {
+  if (!value) return "";
+
+  let html = value;
+
+  // 🧩 1️⃣ If array → take the first element
+  if (Array.isArray(html)) html = html[0];
+
+  // 🧩 2️⃣ If object → convert to string
+  if (typeof html === "object") html = JSON.stringify(html);
+
+  // 🧩 3️⃣ Decode escaped HTML entities (e.g., \u003C → <)
+  if (typeof html === "string") {
+    html = html
+      .replace(/\\u003C/g, "<")
+      .replace(/\\u003E/g, ">")
+      .replace(/\\u0026/g, "&")
+      .replace(/\\\"/g, '"')
+      .replace(/\\\\/g, "\\");
+  }
+
+  html = html.trim();
+
+  // 🧩 4️⃣ Try to parse JSON-like strings
+  // Examples: "[\"<p>hello</p>\"]", "\"<p>hello</p>\""
+  if (/^\s*(\[|\{)?".*"\}?/.test(html)) {
+    try {
+      const parsed = JSON.parse(html);
+      if (Array.isArray(parsed)) {
+        html = parsed[0] || "";
+      } else if (typeof parsed === "string") {
+        html = parsed;
+      } else if (parsed && typeof parsed === "object") {
+        html = Object.values(parsed)[0] as string;
       }
+    } catch {
+      // fallback: continue cleanup
     }
-    return "";
-  };
+  }
+
+  // 🧩 5️⃣ Remove wrapping quotes, brackets, or stray commas
+  html = html
+    .trim()
+    .replace(/^"+|"+$/g, "") // remove leading/trailing double quotes
+    .replace(/^'+|'+$/g, "") // remove single quotes
+    .replace(/^`+|`+$/g, "") // remove backticks
+    .replace(/^\[|\]$/g, "") // remove square brackets
+    .replace(/^,|,$/g, "") // remove commas
+    .trim();
+
+  // 🧩 6️⃣ If the result is still something like "content" or ""content"",
+  // strip those inner quotes too.
+  if (/^"+.*"+$/.test(html)) {
+    html = html.replace(/^"+|"+$/g, "").trim();
+  }
+  if (/^'+.*'+$/.test(html)) {
+    html = html.replace(/^'+|'+$/g, "").trim();
+  }
+
+  // 🧩 7️⃣ Remove the literal word "content" if accidentally saved as just that
+  if (html.toLowerCase().trim() === "content") html = "";
+
+  return html.trim();
+};
+
+
 
   useEffect(() => {
     axios

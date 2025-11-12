@@ -86,7 +86,7 @@ const Kashi = () => {
             try {
                 const res = await axios.get(`${apiUrl}/pujas/all`)
                 const kashiData = res.data.filter((item) => item.category.name === "Puja in Kashi(Kashi Khand)")
-                console.log("Fetched nitya data:", kashiData)
+                // console.log("Fetched nitya data:", kashiData)
                 setKashis(kashiData) // Assuming API returns an array of japa items
             } catch (error) {
                 console.error("Error fetching japa data:", error)
