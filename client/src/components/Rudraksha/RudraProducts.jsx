@@ -39,10 +39,21 @@ export default function RudraProducts() {
                                 </div>
                                 <div className="p-4 text-center">
                                     <h3 className="text-lg font-semibold text-gray-800">{item.productName}</h3>
-                                    <div className="flex items-end justify-center gap-2">
+                                    {/* <div className="flex items-end justify-center gap-2">
                                         <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
                                         <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
                                         <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount && item.productDiscount + "% OFF"}</p>
+                                    </div> */}
+                                    <div className="flex items-end justify-center gap-2">
+                                        {item.productDiscount > 0 ? (
+                                            <>
+                                                <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
+                                                <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
+                                                <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount}% OFF</p>
+                                            </>
+                                        ) : (
+                                            <p className="mt-2 text-xl font-bold text-orange-500">₹{item.productPrice}</p>
+                                        )}
                                     </div>
                                 </div>
                             </Link>

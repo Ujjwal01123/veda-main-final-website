@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch"; // ⚡ import switch
 import { useToast } from "@/components/ui/use-toast";
 import {
   Table,
@@ -29,30 +30,34 @@ import {
   Plus,
   Sparkles,
   Menu,
+  Star,
 } from "lucide-react";
 import { Sidebar } from "@/components/layout/updatedSidebar";
 
 export function ManagePujas() {
   const [pujas, setPujas] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_BASE_API_URL;
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/api/pujas/all`)
-      .then((res) => setPujas(res.data || []))
-      .catch(() =>
-        toast({
-          title: "Error",
-          description: "Failed to load sacred offerings",
-          variant: "destructive",
-        })
-      );
-  }, [toast]);
+    fetchPujas();
+  }, []);
+
+  const fetchPujas = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}/api/pujas/all`);
+      setPujas(res.data || []);
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to load sacred offerings",
+        variant: "destructive",
+      });
+    }
+  };
 
   const filteredPujas = pujas.filter((puja) => {
     return (
@@ -63,16 +68,13 @@ export function ManagePujas() {
 
   const handleView = (id: string) => navigate(`/pujas/view/${id}`);
   const handleEdit = (id: string) => navigate(`/pujas/edit/${id}`);
-  const handleDelete = async (id: string) => {
-    if (
-      !window.confirm("Are you sure you want to remove this sacred offering?")
-    )
-      return;
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to remove this sacred offering?"))
+      return;
     try {
       await axios.delete(`${apiUrl}/api/pujas/${id}`);
       setPujas((prev) => prev.filter((puja) => puja._id !== id));
-
       toast({
         title: "🕉️ Moved",
         description: "Sacred offering moved successfully",
@@ -87,18 +89,40 @@ export function ManagePujas() {
     }
   };
 
+  // ⚡ New: Toggle featured status
+  // const toggleFeatured = async (id: string, currentValue: boolean) => {
+  //   try {
+  //     await axios.put(`${apiUrl}/api/pujas/${id}`, {
+  //       isFeatured: !currentValue,
+  //     });
+  //     setPujas((prev) =>
+  //       prev.map((p) =>
+  //         p._id === id ? { ...p, isFeatured: !currentValue } : p
+  //       )
+  //     );
+  //     toast({
+  //       title: !currentValue ? "✨ Marked Featured" : "Removed from Featured",
+  //       description: `Puja has been ${!currentValue ? "featured" : "unfeatured"}.`,
+  //     });
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to update featured status",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-spiritual-light/10 via-background to-accent/5">
-      {/* Sidebar */} <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      {/* Sidebar */}
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+
       {/* Main Content */}
       <div className="flex-1 transition-all duration-300 ease-in-out p-4 lg:p-6 space-y-6 lg:ml-64">
         {/* Mobile Menu Button */}
         <div className="lg:hidden flex justify-start mb-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(true)}
-          >
+          <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-5 h-5" />
           </Button>
         </div>
@@ -128,12 +152,8 @@ export function ManagePujas() {
                   <Search className="w-5 h-5 text-spiritual-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">
-                    Find Sacred Offerings
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Search and filter your pujas
-                  </p>
+                  <h3 className="font-semibold text-foreground">Find Sacred Offerings</h3>
+                  <p className="text-sm text-muted-foreground">Search and filter your pujas</p>
                 </div>
               </div>
               <div className="flex gap-2 sm:gap-3 flex-wrap">
@@ -155,33 +175,12 @@ export function ManagePujas() {
             </CardContent>
           </Card>
 
-          {/* Filters */}
-          <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm">
-            <CardHeader className="pb-4 flex items-center gap-2">
-              <Filter className="w-5 h-5 text-primary" />
-              <CardTitle className="text-foreground">Sacred Filters</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1 w-full sm:w-auto">
-                <Search className="absolute left-3 top-3 w-4 h-4 text-spiritual" />
-                <Input
-                  placeholder="Search sacred offerings..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-spiritual/20 focus:border-spiritual focus:ring-spiritual/20 bg-background/80 w-full"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Table */}
           <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm overflow-x-auto">
             <CardHeader className="bg-gradient-to-r from-spiritual/5 to-primary/5 border-b border-border/50">
               <div className="flex items-center gap-3">
                 <Sparkles className="w-5 h-5 text-spiritual-foreground" />
-                <CardTitle className="text-foreground">
-                  Sacred Offerings Registry
-                </CardTitle>
+                <CardTitle className="text-foreground">Sacred Offerings Registry</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-0 overflow-x-auto">
@@ -190,7 +189,7 @@ export function ManagePujas() {
                   <TableRow className="bg-gradient-to-r from-spiritual/5 to-accent/5 border-b border-border/30">
                     <TableHead>Title</TableHead>
                     <TableHead>Category</TableHead>
-                    {/* <TableHead>Date</TableHead> */}
+                    {/* <TableHead>Featured</TableHead> ⚡ New column */}
                     <TableHead>Significance</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -198,10 +197,7 @@ export function ManagePujas() {
                 <TableBody>
                   {filteredPujas.length === 0 ? (
                     <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="text-center py-12 text-muted-foreground"
-                      >
+                      <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                         No sacred offerings found
                       </TableCell>
                     </TableRow>
@@ -214,8 +210,16 @@ export function ManagePujas() {
                         <TableCell className="text-muted-foreground">
                           {puja.category?.name || "Universal"}
                         </TableCell>
-                        {/* <TableCell className="text-muted-foreground">
-                          {new Date(puja.date).toLocaleDateString()}
+                        {/* <TableCell>
+                          <div className="flex items-center justify-center gap-2">
+                            <Switch
+                              checked={puja.isFeatured}
+                              onCheckedChange={() =>
+                                toggleFeatured(puja._id, puja.isFeatured)
+                              }
+                            />
+                            {puja.isFeatured && <Star className="w-4 h-4 text-yellow-500" />}
+                          </div>
                         </TableCell> */}
                         <TableCell className="text-muted-foreground truncate max-w-xs">
                           <div
@@ -223,9 +227,8 @@ export function ManagePujas() {
                             dangerouslySetInnerHTML={{
                               __html:
                                 puja.significance?.slice(0, 200) +
-                                  (puja.significance?.length > 200
-                                    ? "..."
-                                    : "") || "<em>Divine blessings await</em>",
+                                  (puja.significance?.length > 200 ? "..." : "") ||
+                                "<em>Divine blessings await</em>",
                             }}
                           />
                         </TableCell>
@@ -236,26 +239,18 @@ export function ManagePujas() {
                                 <MoreHorizontal className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-gradient-card border-border/50"
-                            >
-                              <DropdownMenuItem
-                                onClick={() => handleView(puja._id)}
-                              >
+                            <DropdownMenuContent align="end" className="bg-gradient-card border-border/50">
+                              <DropdownMenuItem onClick={() => handleView(puja._id)}>
                                 <Eye className="w-4 h-4 mr-2" /> View
                               </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleEdit(puja._id)}
-                              >
+                              <DropdownMenuItem onClick={() => handleEdit(puja._id)}>
                                 <Edit className="w-4 h-4 mr-2" /> Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDelete(puja._id)}
                                 className="text-destructive"
                               >
-                                <Trash2 className="w-4 h-4 mr-2" /> Move to
-                                Trash
+                                <Trash2 className="w-4 h-4 mr-2" /> Move to Trash
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -272,9 +267,7 @@ export function ManagePujas() {
           <div className="text-center py-8">
             <div className="flex items-center justify-center gap-2 text-muted-foreground flex-wrap">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm">
-                May your sacred offerings bring divine blessings
-              </span>
+              <span className="text-sm">May your sacred offerings bring divine blessings</span>
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
@@ -283,6 +276,294 @@ export function ManagePujas() {
     </div>
   );
 }
+
+
+
+// import { useState, useEffect } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { useToast } from "@/components/ui/use-toast";
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from "@/components/ui/table";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import {
+//   Search,
+//   Filter,
+//   Eye,
+//   Edit,
+//   Trash2,
+//   MoreHorizontal,
+//   Plus,
+//   Sparkles,
+//   Menu,
+// } from "lucide-react";
+// import { Sidebar } from "@/components/layout/updatedSidebar";
+
+// export function ManagePujas() {
+//   const [pujas, setPujas] = useState<any[]>([]);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [statusFilter, setStatusFilter] = useState("all");
+//   const [sidebarOpen, setSidebarOpen] = useState(false);
+//   const { toast } = useToast();
+//   const navigate = useNavigate();
+//   const apiUrl = import.meta.env.VITE_BASE_API_URL;
+
+//   useEffect(() => {
+//     axios
+//       .get(`${apiUrl}/api/pujas/all`)
+//       .then((res) => setPujas(res.data || []))
+//       .catch(() =>
+//         toast({
+//           title: "Error",
+//           description: "Failed to load sacred offerings",
+//           variant: "destructive",
+//         })
+//       );
+//   }, [toast]);
+
+//   const filteredPujas = pujas.filter((puja) => {
+//     return (
+//       puja.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       puja.category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+//     );
+//   });
+
+//   const handleView = (id: string) => navigate(`/pujas/view/${id}`);
+//   const handleEdit = (id: string) => navigate(`/pujas/edit/${id}`);
+//   const handleDelete = async (id: string) => {
+//     if (
+//       !window.confirm("Are you sure you want to remove this sacred offering?")
+//     )
+//       return;
+
+//     try {
+//       await axios.delete(`${apiUrl}/api/pujas/${id}`);
+//       setPujas((prev) => prev.filter((puja) => puja._id !== id));
+
+//       toast({
+//         title: "🕉️ Moved",
+//         description: "Sacred offering moved successfully",
+//         variant: "destructive",
+//       });
+//     } catch {
+//       toast({
+//         title: "Error",
+//         description: "Failed to remove offering",
+//         variant: "destructive",
+//       });
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-spiritual-light/10 via-background to-accent/5">
+//       {/* Sidebar */} <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+//       {/* Main Content */}
+//       <div className="flex-1 transition-all duration-300 ease-in-out p-4 lg:p-6 space-y-6 lg:ml-64">
+//         {/* Mobile Menu Button */}
+//         <div className="lg:hidden flex justify-start mb-4">
+//           <Button
+//             variant="ghost"
+//             size="icon"
+//             onClick={() => setSidebarOpen(true)}
+//           >
+//             <Menu className="w-5 h-5" />
+//           </Button>
+//         </div>
+
+//         <div className="max-w-full lg:max-w-7xl mx-auto space-y-6">
+//           {/* Header */}
+//           <div className="text-center space-y-4 py-6">
+//             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+//               <div className="w-12 h-12 rounded-full bg-gradient-spiritual flex items-center justify-center shadow-spiritual">
+//                 <Sparkles className="w-6 h-6 text-spiritual-foreground" />
+//               </div>
+//               <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-spiritual bg-clip-text text-transparent">
+//                 Sacred Puja Management
+//               </h1>
+//             </div>
+//             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+//               Manage your divine offerings and sacred ceremonies with reverence
+//               and care
+//             </p>
+//           </div>
+
+//           {/* Action Bar */}
+//           <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm">
+//             <CardContent className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+//               <div className="flex items-center gap-3 w-full sm:w-auto flex-wrap">
+//                 <div className="w-10 h-10 rounded-full bg-gradient-spiritual flex items-center justify-center">
+//                   <Search className="w-5 h-5 text-spiritual-foreground" />
+//                 </div>
+//                 <div>
+//                   <h3 className="font-semibold text-foreground">
+//                     Find Sacred Offerings
+//                   </h3>
+//                   <p className="text-sm text-muted-foreground">
+//                     Search and filter your pujas
+//                   </p>
+//                 </div>
+//               </div>
+//               <div className="flex gap-2 sm:gap-3 flex-wrap">
+//                 <Button
+//                   variant="spiritual"
+//                   className="gap-2 shadow-spiritual"
+//                   onClick={() => navigate("/dashboard/add-puja")}
+//                 >
+//                   <Plus className="w-4 h-4" /> Add Sacred Offering
+//                 </Button>
+//                 <Button
+//                   variant="spiritual"
+//                   className="gap-2 shadow-spiritual"
+//                   onClick={() => navigate("/dashboard/manage-puja-forms")}
+//                 >
+//                   <Plus className="w-4 h-4" /> Manage Puja Forms
+//                 </Button>
+//               </div>
+//             </CardContent>
+//           </Card>
+
+//           {/* Filters */}
+//           <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm">
+//             <CardHeader className="pb-4 flex items-center gap-2">
+//               <Filter className="w-5 h-5 text-primary" />
+//               <CardTitle className="text-foreground">Sacred Filters</CardTitle>
+//             </CardHeader>
+//             <CardContent className="flex flex-col sm:flex-row gap-4">
+//               <div className="relative flex-1 w-full sm:w-auto">
+//                 <Search className="absolute left-3 top-3 w-4 h-4 text-spiritual" />
+//                 <Input
+//                   placeholder="Search sacred offerings..."
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="pl-10 border-spiritual/20 focus:border-spiritual focus:ring-spiritual/20 bg-background/80 w-full"
+//                 />
+//               </div>
+//             </CardContent>
+//           </Card>
+
+//           {/* Table */}
+//           <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm overflow-x-auto">
+//             <CardHeader className="bg-gradient-to-r from-spiritual/5 to-primary/5 border-b border-border/50">
+//               <div className="flex items-center gap-3">
+//                 <Sparkles className="w-5 h-5 text-spiritual-foreground" />
+//                 <CardTitle className="text-foreground">
+//                   Sacred Offerings Registry
+//                 </CardTitle>
+//               </div>
+//             </CardHeader>
+//             <CardContent className="p-0 overflow-x-auto">
+//               <Table className="min-w-full">
+//                 <TableHeader>
+//                   <TableRow className="bg-gradient-to-r from-spiritual/5 to-accent/5 border-b border-border/30">
+//                     <TableHead>Title</TableHead>
+//                     <TableHead>Category</TableHead>
+//                     {/* <TableHead>Date</TableHead> */}
+//                     <TableHead>Significance</TableHead>
+//                     <TableHead className="text-right">Actions</TableHead>
+//                   </TableRow>
+//                 </TableHeader>
+//                 <TableBody>
+//                   {filteredPujas.length === 0 ? (
+//                     <TableRow>
+//                       <TableCell
+//                         colSpan={5}
+//                         className="text-center py-12 text-muted-foreground"
+//                       >
+//                         No sacred offerings found
+//                       </TableCell>
+//                     </TableRow>
+//                   ) : (
+//                     filteredPujas.map((puja) => (
+//                       <TableRow key={puja._id}>
+//                         <TableCell className="font-medium text-foreground">
+//                           {puja.title}
+//                         </TableCell>
+//                         <TableCell className="text-muted-foreground">
+//                           {puja.category?.name || "Universal"}
+//                         </TableCell>
+//                         {/* <TableCell className="text-muted-foreground">
+//                           {new Date(puja.date).toLocaleDateString()}
+//                         </TableCell> */}
+//                         <TableCell className="text-muted-foreground truncate max-w-xs">
+//                           <div
+//                             className="line-clamp-2 text-sm prose prose-sm prose-spiritual"
+//                             dangerouslySetInnerHTML={{
+//                               __html:
+//                                 puja.significance?.slice(0, 200) +
+//                                   (puja.significance?.length > 200
+//                                     ? "..."
+//                                     : "") || "<em>Divine blessings await</em>",
+//                             }}
+//                           />
+//                         </TableCell>
+//                         <TableCell className="text-right">
+//                           <DropdownMenu>
+//                             <DropdownMenuTrigger asChild>
+//                               <Button variant="ghost" size="icon">
+//                                 <MoreHorizontal className="w-4 h-4" />
+//                               </Button>
+//                             </DropdownMenuTrigger>
+//                             <DropdownMenuContent
+//                               align="end"
+//                               className="bg-gradient-card border-border/50"
+//                             >
+//                               <DropdownMenuItem
+//                                 onClick={() => handleView(puja._id)}
+//                               >
+//                                 <Eye className="w-4 h-4 mr-2" /> View
+//                               </DropdownMenuItem>
+//                               <DropdownMenuItem
+//                                 onClick={() => handleEdit(puja._id)}
+//                               >
+//                                 <Edit className="w-4 h-4 mr-2" /> Edit
+//                               </DropdownMenuItem>
+//                               <DropdownMenuItem
+//                                 onClick={() => handleDelete(puja._id)}
+//                                 className="text-destructive"
+//                               >
+//                                 <Trash2 className="w-4 h-4 mr-2" /> Move to
+//                                 Trash
+//                               </DropdownMenuItem>
+//                             </DropdownMenuContent>
+//                           </DropdownMenu>
+//                         </TableCell>
+//                       </TableRow>
+//                     ))
+//                   )}
+//                 </TableBody>
+//               </Table>
+//             </CardContent>
+//           </Card>
+
+//           {/* Footer */}
+//           <div className="text-center py-8">
+//             <div className="flex items-center justify-center gap-2 text-muted-foreground flex-wrap">
+//               <Sparkles className="w-4 h-4" />
+//               <span className="text-sm">
+//                 May your sacred offerings bring divine blessings
+//               </span>
+//               <Sparkles className="w-4 h-4" />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 // import { useState, useEffect } from "react";
 // import axios from "axios";

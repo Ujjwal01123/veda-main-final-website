@@ -121,7 +121,7 @@ export default function Filter() {
         setIsExpanded(false)
     }, [filter, search])
 
-    const upcomingPujas = puja.filter((p) => p.category.name === "Upcoming Festival Puja" && p.title.toLowerCase().includes(search.toLowerCase())).slice(0, 3)
+    const upcomingPujas = puja.filter((p) => p.category.name === "Upcoming Special Festival Puja" && p.title.toLowerCase().includes(search.toLowerCase())).slice(0, 3)
 
     const otherPujas = puja.filter((p) => {
         if (p.category.name === "Upcoming Festival Puja") return false

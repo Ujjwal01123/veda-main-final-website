@@ -9,7 +9,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { toast } from "sonner"
 
-
 function AllProductPage() {
     const [filter, setFilter] = useState("all")
     const { rudraksha } = useRudraksha()
@@ -18,7 +17,7 @@ function AllProductPage() {
 
     return (
         <>
-            <div className="container mx-auto px-4 mt-10">
+            <div className="container mx-auto mt-10 px-4">
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-4">
                     {rudraksha?.slice(0, 4).map((item) => (
                         <div key={item._id} className="relative overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-105 hover:shadow-xl">
@@ -37,10 +36,15 @@ function AllProductPage() {
                                 <div className="p-4 text-center">
                                     <h3 className="text-lg font-semibold text-gray-800">{item.productName}</h3>
                                     <div className="flex items-end justify-center gap-2">
-                                        {/* <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p> */}
-                                        <p className="mt-2 text-xl font-bold text-orange-500">₹{item.productPrice}</p>
-                                        {/* <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p> */}
-                                        {/* <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount}% OFF</p> */}
+                                        {item.productDiscount > 0 ? (
+                                            <>
+                                                <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
+                                                <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
+                                                <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount}% OFF</p>
+                                            </>
+                                        ) : (
+                                            <p className="mt-2 text-xl font-bold text-orange-500">₹{item.productPrice}</p>
+                                        )}
                                     </div>
                                 </div>
                             </Link>
@@ -89,10 +93,15 @@ function AllProductPage() {
                                 <div className="p-4 text-center">
                                     <h3 className="text-lg font-semibold text-gray-800">{item.productName}</h3>
                                     <div className="flex items-end justify-center gap-2">
-                                        <p className="mt-2 text-xl font-bold text-orange-500">₹{item.productPrice}</p>
-                                        {/* <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
-                                        <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
-                                        <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount}% OFF</p> */}
+                                        {item.productDiscount > 0 ? (
+                                            <>
+                                                <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
+                                                <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
+                                                <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount}% OFF</p>
+                                            </>
+                                        ) : (
+                                            <p className="mt-2 text-xl font-bold text-orange-500">₹{item.productPrice}</p>
+                                        )}
                                     </div>
                                 </div>
                             </Link>
