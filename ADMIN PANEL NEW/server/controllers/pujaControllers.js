@@ -290,6 +290,48 @@ const hardDeletePujaById = async (req, res) => {
   }
 };
 
+// multiple pujas by categories
+// 🕉 Get Pujas by Multiple Categories
+const getPujaMultipleByCategories = async (req, res) => {
+  try {
+    let { categories } = req.body;
+
+    // Validate input
+    if (!categories || !Array.isArray(categories) || categories.length === 0) {
+      return res.status(400).json({ message: "Categories array is required" });
+    }
+
+    // Remove duplicates
+    categories = [...new Set(categories)];
+
+    // Validate each category ID
+    const validCategories = await Category.find({
+      _id: { $in: categories },
+    }).select("_id");
+
+    if (validCategories.length === 0) {
+      return res.status(404).json({ message: "No valid categories found" });
+    }
+
+    const validCategoryIds = validCategories.map((c) => c._id);
+
+    // Fetch pujas belonging to ANY of those categories
+    const pujas = await Puja.find({
+      category: { $in: validCategoryIds },
+      isDeleted: false,
+    }).populate("category", "name description");
+
+    res.json({
+      success: true,
+      total: pujas.length,
+      pujas,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   hardDeletePujaById,
   getAllPujas,
@@ -301,9 +343,8 @@ module.exports = {
   getDeletedPujas,
   getPujaByCategories,
   getUpcomingPuja,
+  getPujaMultipleByCategories,
 };
-
-
 
 // const Puja = require("../models/Puja");
 // const Category = require("../models/Category");

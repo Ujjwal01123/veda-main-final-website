@@ -6,6 +6,8 @@ import "aos/dist/aos.css" // AOS CSS को इम्पोर्ट करे�
 import axios from "axios"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
+import { format } from "date-fns"
+import { calculateDiscount } from "@/utils/utils"
 
 const Carddetails = () => {
     const router = useRouter()
@@ -274,6 +276,43 @@ const Carddetails = () => {
         fetchPujas()
     }, [pujaData?.category?.name, pujaData?._id])
 
+    // api fetch for offers
+    const [offers, setOffers] = useState([])
+    //
+    useEffect(() => {
+        // if (!pujaData?.category?.name) return
+
+        const fetchOffers = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/offer/all`)
+                const allOffer = response.data.offers // ✅ use .data
+                const offferStatus = allOffer.filter((p) => p.isActive === true)
+                const ActiveOffer = offferStatus[0]
+                setOffers(ActiveOffer)
+            } catch (error) {
+                console.error("Error fetching related pujas:", error)
+            }
+        }
+
+        fetchOffers()
+    }, [])
+
+    const checkValidOffer = () => {
+        if (!pujaData?.title || !offers) return false
+
+        // make sure we treat offers as array
+        const offerArray = Array.isArray(offers) ? offers : [offers]
+
+        const isValid = offerArray.some((offer) => offer.pujaIds?.some((p) => p.title === pujaData.title))
+
+        // console.log("Is there a valid offer for this puja?", isValid)
+        return isValid
+    }
+
+    // checkValidOffer()
+
+    // const formattedDate = format(new Date("2025-10-31T18:30:00.000Z"), "dd/MM/yy")
+
     // console.log(pujaData)
     return (
         <>
@@ -321,40 +360,6 @@ const Carddetails = () => {
                                 </video>
                             )}
                         </div>
-
-                        {/* Thumbnails row
-                        <div id="thumbRow" className="grid grid-cols-5 gap-3 sm:grid-cols-6 md:grid-cols-7" data-aos="zoom-in">
-                            <img
-                                onClick={() => handleThumbClick("image", "/images/Bagalamukhi Puja.jpg")}
-                                src="/images/Bagalamukhi Puja.jpg"
-                                className="aspect-square w-full cursor-pointer rounded-xl border-2 border-transparent object-cover transition hover:border-yellow-600"
-                                alt="thumbnail"
-                            />
-                            <img
-                                onClick={() => handleThumbClick("image", "/images/A3.jpg")}
-                                src="/images/A3.jpg"
-                                className="aspect-square w-full cursor-pointer rounded-xl border-2 border-transparent object-cover transition hover:border-yellow-600"
-                                alt="thumbnail"
-                            />
-                            <img
-                                onClick={() => handleThumbClick("image", "/images/A4.jpg")}
-                                src="/images/A4.jpg"
-                                className="aspect-square w-full cursor-pointer rounded-xl border-2 border-transparent object-cover transition hover:border-yellow-600"
-                                alt="thumbnail"
-                            />
-                            <img
-                                onClick={() => handleThumbClick("image", "/images/Adi Lakshmi Puja (Ashta-Lakshmi).jpg")}
-                                src="/images/Adi Lakshmi Puja (Ashta-Lakshmi).jpg"
-                                className="aspect-square w-full cursor-pointer rounded-xl border-2 border-transparent object-cover transition hover:border-yellow-600"
-                                alt="thumbnail"
-                            />
-                            <img
-                                onClick={() => handleThumbClick("image", "/images/arpit.jpg")}
-                                src="/images/arpit.jpg"
-                                className="aspect-square w-full cursor-pointer rounded-xl border-2 border-transparent object-cover transition hover:border-yellow-600"
-                                alt="thumbnail"
-                            />
-                        </div> */}
                     </div>
 
                     {/* Product Details Card */}
@@ -365,10 +370,6 @@ const Carddetails = () => {
                                 <h1 className="gold-text mt-1 mb-6 text-3xl font-extrabold md:text-4xl" data-aos="fade-down">
                                     {pujaData?.title}
                                 </h1>
-                                {/* <div className="mt-2 flex items-center gap-3">
-                                    <div className="flex items-center text-yellow-600">★★★★★</div>
-                                    <span className="text-xs text-gray-500">(124 reviews)</span>
-                                </div> */}
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
@@ -389,17 +390,38 @@ const Carddetails = () => {
                         </div>
 
                         <div className="mt-3 flex items-end gap-3">
-                            <span className="text-3xl font-bold text-red-600">₹{pujaData?.price}</span>
+                            {checkValidOffer() ? (
+                                <>
+                                    <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(pujaData?.price, offers.discountPercent)}</p>
+                                    <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{pujaData?.price}</p>
+                                    <p className="text-md mt-2 font-bold text-green-600">{offers?.discountPercent}% OFF</p>
+                                </>
+                            ) : (
+                                <span className="text-3xl font-bold text-red-600">₹{pujaData?.price}</span>
+                            )}
+
                             {/* <span className="text-sm text-gray-400 line-through">₹1,599</span> */}
                             {/* <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700">Save 28%</span> */}
                         </div>
+                        {checkValidOffer() && (
+                            <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-gradient-to-r from-yellow-100 to-amber-100 px-4 py-3 text-yellow-800 shadow">
+                                {/* <div className="font-semibold">🎉 Offer: 25/08/25 – 20/09/25</div> */}
+                                {/* <div className="font-semibold">
+                                🎉 Offer: {offers.startDate ? format(new Date(offers.startDate), "dd/MM/yy") : "N/A"} - {offers.endDate ? format(new Date(offers.endDate), "dd/MM/yy") : "N/A"}asd
+                            </div> */}
+                                <div className="font-semibold">
+                                    <div className="font-semibold">
+                                        <>
+                                            🎉 Offer: {format(new Date(offers.startDate), "dd/MM/yy")} - {format(new Date(offers.endDate), "dd/MM/yy")}
+                                        </>
+                                    </div>
+                                </div>
 
-                        <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-gradient-to-r from-yellow-100 to-amber-100 px-4 py-3 text-yellow-800 shadow">
-                            <div className="font-semibold">🎉 Offer: 25/08/25 – 20/09/25</div>
-                            <div id="countdown" className="text-xs font-bold">
-                                {countdown}
+                                <div id="countdown" className="text-xs font-bold">
+                                    {countdown}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
                             <div className="rounded-xl border bg-white p-3 hover:scale-105 hover:bg-yellow-500 hover:shadow-md">✅ Certified Priests</div>

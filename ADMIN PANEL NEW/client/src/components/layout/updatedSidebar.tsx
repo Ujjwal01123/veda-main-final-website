@@ -92,7 +92,7 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
           <div>
             <Button
               variant="ghost"
-              className="w-full justify-between gap-3"
+              className="w-full justify-between gap-3 mb-1"
               onClick={() => toggleMenu("puja")}
             >
               <span className="flex items-center gap-3">
@@ -130,10 +130,8 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
 
           <Link to="/dashboard/product" onClick={() => setOpen(false)}>
             <Button
-              variant={
-                isActive("/dashboard/product") ? "spiritual" : "ghost"
-              }
-              className="w-full justify-start gap-3"
+              variant={isActive("/dashboard/product") ? "spiritual" : "ghost"}
+              className="w-full justify-start gap-3 mb-1"
             >
               <List className="w-4 h-4" /> Manage Products
             </Button>
@@ -144,7 +142,7 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
               variant={
                 isActive("/dashboard/manage-blogs") ? "spiritual" : "ghost"
               }
-              className="w-full justify-start gap-3"
+              className="w-full justify-start gap-3 mb-1"
             >
               <List className="w-4 h-4" /> Manage Blogs
             </Button>
@@ -155,9 +153,19 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
               variant={
                 isActive("/dashboard/manage-bookings") ? "spiritual" : "ghost"
               }
-              className="w-full justify-start gap-3"
+              className="w-full justify-start gap-3 mb-1"
             >
               <List className="w-4 h-4" /> Manage Bookings
+            </Button>
+          </Link>
+
+          {/* manage offers */}
+          <Link to="/pujas/offers" onClick={() => setOpen(false)}>
+            <Button
+              variant={isActive("/pujas/offers") ? "spiritual" : "ghost"}
+              className="w-full justify-start gap-3 mb-1"
+            >
+              <List className="w-4 h-4" /> Manage Puja Offers
             </Button>
           </Link>
 
@@ -167,31 +175,22 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
               variant={
                 isActive("/dashboard/banner-options") ? "spiritual" : "ghost"
               }
-              className="w-full justify-start gap-3"
+              className="w-full justify-start gap-3 mb-1"
             >
               <Upload className="w-4 h-4" /> Manage Banner
             </Button>
           </Link>
-
 
           <Link to="/dashboard/manage-draft" onClick={() => setOpen(false)}>
             <Button
               variant={
                 isActive("/dashboard/manage-draft") ? "spiritual" : "ghost"
               }
-              className="w-full justify-start gap-3"
+              className="w-full justify-start gap-3 mb-1"
             >
               <Trash2 className="w-4 h-4" /> Drafts & Trash
             </Button>
           </Link>
-
-          
-
-          
-
-          
-
-          
         </nav>
       </div>
     </>
@@ -221,4 +220,3 @@ function SidebarLink({
     </Link>
   );
 }
-

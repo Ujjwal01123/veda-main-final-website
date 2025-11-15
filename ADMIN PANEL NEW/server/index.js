@@ -48,6 +48,9 @@ app.use("/api/banners", bannerRouter);
 // ----------------- ROUTES -----------------
 app.use("/api/blogs", blogRoutes);
 app.use("/api/pujas", require("./routes/pujaRoutes"));
+app.use("/api/offer", require("./routes/offer/offer"));
+app.use("/api/rudraksha/offer", require("./routes/offer/rudra"));
+app.use("/api/bracelet/offer", require("./routes/offer/bracelet"));
 app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use("/api/bookings", require("./routes/bookingRoutes"));
 app.use(
@@ -55,8 +58,7 @@ app.use(
   require("./routes/participateBookingRoutes")
 );
 
-// product section 
-
+// product section
 
 // ----------------- CRON JOB -----------------
 require("./scheduler/reminderJob"); //  start the reminder job

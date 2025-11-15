@@ -5,6 +5,7 @@ import { Sidebar } from "./updatedSidebar"; // ✅ your latest sidebar
 import { Header } from "./Header";
 import { cn } from "@/lib/utils";
 import type { DashboardSection } from "@/pages/Dashboard";
+import axios from "axios";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -12,12 +13,18 @@ interface DashboardLayoutProps {
   onSectionChange?: (section: DashboardSection) => void;
 }
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export function DashboardLayout({
   children,
   activeSection = "dashboard",
   onSectionChange,
 }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    axios.post(`${apiUrl}/users/logout`);
+  };
 
   return (
     <div className="flex min-h-screen bg-gradient-hero">
@@ -36,7 +43,10 @@ export function DashboardLayout({
           "lg:ml-64"
         )}
       >
-        <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+        <Header
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onLogout={handleLogout}
+        />
         <main className="p-6">{children}</main>
       </div>
     </div>

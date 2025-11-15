@@ -110,24 +110,6 @@ function page() {
                 </div>
             </div>
 
-            {/* <div className="body-font text-gray-700">
-                <div className="mt-12 flex justify-center text-4xl font-semibold">Why Us?</div>
-                <div className="container mx-auto px-5 py-6">
-                    <div className="flex flex-wrap justify-center text-center">
-                        {features.map((feature, index) => (
-                            <div className="p-4 sm:w-1/2 md:w-1/4" key={index}>
-                                <div className="duration-500">
-                                    <div className="flex justify-center">
-                                        <img src={feature.imageSrc} className="mb-3 w-32" alt={feature.title} />
-                                    </div>
-                                    <h2 className="title-font font-regular text-xl text-neutral-800">{feature.title}</h2>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div> */}
-
             <div className="bg-gray-100">
                 <div className="pt-10">
                     <h3 className="text-center text-4xl font-bold text-red-800">Top Products</h3>

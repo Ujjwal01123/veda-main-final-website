@@ -6,9 +6,12 @@ import Image from "next/image"
 import { CircleX, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { calculateDiscount } from "@/utils/utils"
+import { Button } from "./ui/button"
+import { useState } from "react"
 
 export default function Cart() {
     const { cart, increaseQty, decreaseQty, removeItem, clearCart } = useCart()
+    const [open, setOpen] = useState(false)
     const subtotal = cart.items.reduce((acc, item) => acc + item.productPrice * item.quantity, 0)
 
     const discount = cart.items.reduce((acc, item) => acc + (item.productPrice - calculateDiscount(item.productPrice, item.productDiscount)) * item.quantity, 0)
@@ -17,7 +20,7 @@ export default function Cart() {
     const total = cart.totalPrice + gst
 
     return (
-        <Sheet className="z-50">
+        <Sheet className="z-50" open={open} onOpenChange={setOpen}>
             <SheetTrigger className="cursor-pointer">
                 <div className="relative">
                     <FaShoppingCart className="text-xl" />
@@ -101,12 +104,14 @@ export default function Cart() {
                     <div className="flex items-center justify-between">
                         <span className="font-semibold">Total:</span> <span className="font-bold text-orange-500">₹{total}</span>
                     </div>
-                    <Link
-                        href="/checkout"
-                        className="inline-block w-full cursor-pointer rounded border border-orange-500 px-6 py-2 text-center font-semibold transition-all hover:bg-orange-500 hover:text-white"
-                    >
-                        Checkout
-                    </Link>
+                    <Button variant={"ghost"} className={"p-0"} onClick={() => setOpen(false)}>
+                        <Link
+                            href="/checkout"
+                            className="inline-block w-full cursor-pointer rounded border border-orange-500 px-6 py-2 text-center font-semibold transition-all hover:bg-orange-500 hover:text-white"
+                        >
+                            Checkout
+                        </Link>
+                    </Button>
                 </SheetFooter>
             </SheetContent>
         </Sheet>

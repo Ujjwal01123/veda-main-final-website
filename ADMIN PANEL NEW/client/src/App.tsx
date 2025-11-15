@@ -71,7 +71,10 @@ import ManageProductOrders from "./components/dashboard/ManageProductOrders";
 import GemstoneForm from "./components/dashboard/GemstoneForm";
 import { ManageGemstone } from "./components/dashboard/ManageGemstone";
 import { ProductRevenueCalendar } from "./pages/productRevenueCalender";
-
+import { OfferForm } from "./components/dashboard/offer/offerForm";
+import OfferViewPage from "./components/dashboard/offer/viewOffer";
+import { RudrakshaOfferForm } from "./components/dashboard/product/rudrakshaOfferForm";
+import { BraceletOfferForm } from "./components/dashboard/product/braceletOfferForm";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +89,11 @@ const App = () => (
           <Route path="/dashboard/dashboard" element={<Dashboard />} />
           {/* <Route path="/pujas" element={<ManagePujas />} /> */}
           <Route path="/pujas/view/:id" element={<ViewPuja />} />
+          <Route path="/pujas/offers" element={<OfferForm />} />
+          <Route path="/pujas/offers" element={<OfferForm />} />
+          <Route path="/rudraksha/offers" element={<RudrakshaOfferForm />} />
+          <Route path="/bracelet/offers" element={<BraceletOfferForm />} />
+          {/* <Route path="/pujas/offers/view/:id" element={<OfferViewPage />} /> */}
           <Route path="/pujas/edit/:id" element={<EditPuja />} />
           {/*  */}
           <Route path="/blogs/view/:id" element={<ViewBlog />} />
@@ -140,7 +148,10 @@ const App = () => (
           <Route path="/dashboard/add-category" element={<CategoryForm />} />
           <Route path="/dashboard/add-gemstone" element={<GemstoneForm />} />
           <Route path="/dashboard/manage" element={<ManagePujas />} />
-          <Route path="/dashboard/manage-gemstones" element={<ManageGemstone />} />
+          <Route
+            path="/dashboard/manage-gemstones"
+            element={<ManageGemstone />}
+          />
 
           {/*  */}
 
@@ -197,8 +208,11 @@ const App = () => (
           <Route path="/dashboard/upload" element={<UploadData />} />
           {/* product section */}
           {/* {/* <Route path="/dashboard/product" element={<ProductDashboard/>} /> */}
-          <Route path="/dashboard/product" element={<ProductDashboard/>} /> 
-          <Route path="/dashboard/manage-product-orders" element={<ManageProductOrders/>} /> 
+          <Route path="/dashboard/product" element={<ProductDashboard />} />
+          <Route
+            path="/dashboard/manage-product-orders"
+            element={<ManageProductOrders />}
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

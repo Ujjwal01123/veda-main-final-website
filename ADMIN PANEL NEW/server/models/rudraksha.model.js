@@ -13,6 +13,25 @@ const rudrakshaSchema = new mongoose.Schema(
     productBenefits: { type: [String] },
     productFaqs: { type: [String] },
     productShipping: { type: [String] },
+    shortDescription: { type: [String] },
+    // shortDescription: {
+    //   type: [String], // limit for meta/preview usage
+    // },
+    // ✅ SEO fields
+    metaTitle: {
+      type: String,
+      trim: true,
+      maxlength: 70,
+    },
+    metaDescription: {
+      type: String,
+      trim: true,
+      maxlength: 160,
+    },
+    metaKeywords: {
+      type: [String], // e.g., ["Ganesh Puja", "Hindu rituals"]
+      default: [],
+    },
     options: [
       {
         title: { type: String },

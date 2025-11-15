@@ -5,6 +5,9 @@ const ApiResponse = require("../utils/apiResponse.js");
 // -------------------- ADD RUDRAKSHA --------------------
 exports.addRudraksha = async (req, res) => {
   const { body } = req;
+
+  const { shortDescription, metaTitle, metaDescription, metaKeywords } = body;
+
   const energization = body?.energization ? JSON.parse(body?.energization) : [];
   const options = JSON.parse(req.body.options);
 
@@ -29,6 +32,10 @@ exports.addRudraksha = async (req, res) => {
     productPath: imagesPath,
     shopifyLink: body.shopifyLink || "",
     youtubeLink: body.youtubeLink || "",
+    shortDescription,
+    metaTitle,
+    metaDescription,
+    metaKeywords,
     isDeleted: false,
     deletedAt: null,
   });
@@ -150,6 +157,10 @@ exports.updateRudraksha = async (req, res) => {
       productFaqs,
       productShipping,
       energization,
+      shortDescription,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
       options,
       existingImages,
       removedImages,

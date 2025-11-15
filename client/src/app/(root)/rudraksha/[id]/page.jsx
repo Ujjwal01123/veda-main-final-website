@@ -1,4 +1,3 @@
-// previous code
 "use client"
 import { getRudrakshaById } from "@/apis/controllers/rudrakshaController"
 import { useCart } from "@/context/cartContext"
@@ -11,12 +10,15 @@ import { useParams, useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 function ProductDetails() {
     const { id } = useParams()
     const [product, setProduct] = useState({})
-    const { addItem } = useCart()
+    const { cart, addItem, increaseQty, decreaseQty } = useCart()
     const { rudraksha } = useRudraksha()
     const router = useRouter()
     const [radioSelected, setRadioSelected] = useState(null)
@@ -41,6 +43,7 @@ function ProductDetails() {
 
     const fetchRudraksha = async () => {
         const res = await getRudrakshaById(id)
+        console.log(res.data)
         setProduct(res.data.rudraksha)
     }
 
@@ -49,10 +52,9 @@ function ProductDetails() {
     }, [])
 
     const [mainImageIdx, setMainImageIdx] = useState(0)
-    const [showShare, setShowShare] = useState(false)
 
     const copyLink = () => {
-        const currentUrl = window.location.href // ✅ gets current page URL
+        const currentUrl = window.location.href
         navigator.clipboard
             .writeText(currentUrl)
             .then(() => {
@@ -65,16 +67,18 @@ function ProductDetails() {
 
     const [selected, setSelected] = useState(false)
 
-    const handleChange = (e) => {
-        const selectedOption = e.target.options[e.target.selectedIndex]
-        const value = Number(selectedOption.value) // price
-        const isHaveForm = selectedOption.dataset.ishaveform === "true"
-        setSelected({ value, isHaveForm })
+    const handleChange = (val) => {
+        const selected = JSON.parse(val)
+        setSelected({
+            value: Number(selected.price),
+            isHaveForm: selected.isHaveForm,
+        })
     }
+
     const basePrice = product.productPrice || 0
     const energizationPrice = selected.value || 0
-    const finalPrice = basePrice + energizationPrice
-
+    const selectedOptionPrice = radioSelected ? radioSelected.price : 0
+    const finalPrice = basePrice + energizationPrice + selectedOptionPrice
     return (
         <>
             <div className="mx-auto max-w-7xl px-6 py-3 text-sm text-gray-600">
@@ -98,6 +102,7 @@ function ProductDetails() {
                                     key={img + idx}
                                     src={img}
                                     onClick={() => setMainImageIdx(idx)}
+                                    onMouseEnter={() => setMainImageIdx(idx)}
                                     className={`h-20 w-20 cursor-pointer rounded border border-yellow-700 hover:border-2 ${mainImageIdx === idx ? "border-yellow-700" : ""}`}
                                     width={100}
                                     height={100}
@@ -123,7 +128,6 @@ function ProductDetails() {
                                 <p className="text-md mt-2 font-bold text-green-600">{product.productDiscount}% OFF</p>
                             </div>
 
-                            {/* 🛒 Shopify link added here */}
                             {product.shopifyLink && (
                                 <a
                                     href={product.shopifyLink}
@@ -141,47 +145,61 @@ function ProductDetails() {
                             <p className="text-lg font-semibold text-gray-500">100% Authentic Rudraksha</p>
                         </div>
                         <div className="flex space-x-3">
-                            <button className="flex h-10 w-10 items-center justify-center rounded-full border hover:bg-yellow-100 hover:text-yellow-600" onClick={() => setShowShare(true)}>
-                                <Share />
-                            </button>
+                            <Dialog>
+                                <DialogTrigger>
+                                    <Share />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <div>
+                                        <h2 className="mb-3 text-lg font-bold text-yellow-600">Share this Rudraksha</h2>
+                                        <div className="mb-4 flex items-center">
+                                            <input id="pageLink" type="text" value={window.location.href} readOnly className="flex-1 rounded-l-lg border px-2 py-1 text-sm" />
+                                            <button onClick={copyLink} className="rounded-r-lg bg-yellow-500 px-3 py-1 text-white">
+                                                Copy
+                                            </button>
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-3 text-center">
+                                            <Link
+                                                href={`https://api.whatsapp.com/send?text=${window.location.href}`}
+                                                target="_blank"
+                                                className="rounded-lg bg-green-500 py-2 text-white hover:opacity-90"
+                                            >
+                                                WhatsApp
+                                            </Link>
+                                            <Link
+                                                href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+                                                target="_blank"
+                                                className="rounded-lg bg-blue-600 py-2 text-white hover:opacity-90"
+                                            >
+                                                Facebook
+                                            </Link>
+                                            <Link href="https://www.instagram.com/" target="_blank" className="rounded-lg bg-pink-500 py-2 text-white hover:opacity-90">
+                                                Instagram
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </div>
                     </div>
-                    {/* <marquee behavior="alternate" direction="right" className="font-bold text-red-500">
-                        Offer Available: 25/08/25-20/09/25
-                    </marquee> */}
 
-                    {/* <div className="border-t pt-4 text-sm">
-                        <ul className="grid grid-cols-2 gap-y-2 sm:grid-cols-3">
-                            <li>
-                                Width: <span className="font-semibold">00</span>
-                            </li>
-                            <li>
-                                Bead size: <span className="font-semibold">00</span>
-                            </li>
-                            <li>
-                                Origin: <span className="font-semibold">00</span>
-                            </li>
-                            <li className="col-span-2 sm:col-span-3">
-                                Certification / Energization process: <br />
-                                <span className="font-semibold">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta officiis provident quidem ex neque cupiditate nesciunt tempora commodi, recusandae repellendus,
-                                    eveniet nam enim iure porro.
-                                </span>
-                            </li>
-                        </ul>
-                    </div> */}
+                    <div className="my-2 flex items-center justify-between gap-2 border-t-2 border-b-2 border-dotted py-2">
+                        <label className="block font-semibold">Pooja/Energization (optional)</label>
+                        <Select onValueChange={handleChange} defaultValue="">
+                            <SelectTrigger>
+                                <SelectValue placeholder="--choose energization--" />
+                            </SelectTrigger>
 
-                    <div>
-                        <label className="mt-4 block font-semibold">Pooja/Energization (optional)</label>
-                        <select className="mt-1 w-full rounded-lg border p-2" onChange={handleChange} defaultValue="">
-                            <option value="0">--choose energization--</option>
-                            {product.energization?.map((item, idx) => (
-                                <option className="capitalize" key={idx} value={item.price} data-ishaveform={item.isHaveForm}>
-                                    {item.title} - ₹{item.price}
-                                </option>
-                            ))}
-                        </select>
+                            <SelectContent>
+                                {product.energization?.map((item, idx) => (
+                                    <SelectItem key={idx} value={JSON.stringify(item)}>
+                                        {item.title} - ₹{item.price}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
+
                     {selected?.isHaveForm && (
                         <div className="mt-2 space-y-2 rounded-xl border bg-yellow-50 p-4">
                             <div className="grid items-center gap-1 sm:grid-cols-2">
@@ -241,89 +259,127 @@ function ProductDetails() {
                         {product?.options?.map((item) => (
                             <label
                                 key={item._id}
-                                className={`cursor-pointer rounded-xl border px-2 transition ${
-                                    radioSelected === item._id ? "border-gray-300 bg-orange-500 text-white shadow-md" : "border-gray-300 bg-white hover:bg-gray-100"
-                                }`}
+                                className={`size-36 cursor-pointer rounded-xl border px-2 transition ${radioSelected?._id === item._id ? "bg-orange-500 bg-gradient-to-r from-yellow-400 to-orange-500 shadow-md" : "border-gray-300 bg-white"}`}
                             >
-                                <input type="radio" name="options" value={item.title} checked={radioSelected === item._id} onChange={() => setRadioSelected(item._id)} className="hidden" />
-                                <span className="font-medium">{item.title}</span>
+                                <input type="radio" name="options" value={item._id} checked={radioSelected === item._id} onChange={() => setRadioSelected(item)} className="hidden" />
+
+                                <div className="w-full text-center font-medium">
+                                    {item.title === "Only Bead" && <Image width={100} height={100} src="/images/bead-icon.jpg" alt="bead" className="h-24 object-cover" />}
+                                    {item.title.trim() === "Silver Pendant".trim() && <Image width={100} height={100} src="/images/rudra-pandent.png" alt="pendant" className="h-24 object-cover" />}
+                                </div>
+                                <div className={`block w-full text-center ${radioSelected?._id === item._id && "font-bold text-white"}`}>{item.title}</div>
                             </label>
                         ))}
                     </div>
                     {product?.stock <= 0 && <p className="mt-2 text-sm text-red-500">Out of stock</p>}
                     {!product?.stock <= 0 && (
-                        <div className="flex items-center space-x-3">
-                            <button
-                                onClick={() => {
-                                    if (selected?.isHaveForm) {
-                                        if (validateForm()) {
-                                            addItem({
-                                                ...product,
-                                                productPrice: finalPrice,
-                                                selectedEnergization: selected,
-                                                energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
-                                            })
-                                            toast.success("Added to cart!")
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <div className="col-span-1 flex gap-1">
+                                    <Button onClick={() => decreaseQty(product._id)} variant={"outline"} className={"hover:text-white"}>
+                                        -
+                                    </Button>
+                                    <Button readOnly variant={"ghost"}>
+                                        {cart.items?.find((item) => item._id === product._id)?.quantity || 0}
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            const item = cart.items.find((c) => c._id === product._id)
+                                            if (item) {
+                                                increaseQty(product._id)
+                                            } else {
+                                                addItem({
+                                                    ...product,
+                                                    productPrice: finalPrice,
+                                                    selectedEnergization: selected,
+                                                    selectedOption: radioSelected,
+                                                    energizationForm: selected?.isHaveForm ? formData : null,
+                                                })
+                                            }
+                                        }}
+                                        variant={"outline"}
+                                        className={"hover:text-white"}
+                                    >
+                                        +
+                                    </Button>
+                                </div>
+                                <div className="col-span-3 w-full">
+                                    <button
+                                        onClick={() => {
+                                            if (selected?.isHaveForm) {
+                                                if (validateForm()) {
+                                                    addItem({
+                                                        ...product,
+                                                        productPrice: finalPrice,
+                                                        selectedEnergization: selected,
+                                                        selectedOption: radioSelected,
+                                                        energizationForm: selected?.isHaveForm ? formData : null,
+                                                    })
+                                                    toast.success("Added to cart!")
+                                                } else {
+                                                    toast.error("Please fill all the fields")
+                                                }
+                                            } else {
+                                                addItem({
+                                                    ...product,
+                                                    productPrice: finalPrice,
+                                                    selectedEnergization: selected,
+                                                    selectedOption: radioSelected,
+                                                    energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
+                                                })
+                                                toast.success("Added to cart!")
+                                            }
+                                        }}
+                                        className="w-full rounded-lg border border-yellow-600 px-6 py-3 font-semibold text-yellow-600 transition duration-300 hover:bg-yellow-500 hover:shadow-md"
+                                    >
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => {
+                                        if (selected?.isHaveForm) {
+                                            if (validateForm()) {
+                                                addItem({
+                                                    ...product,
+                                                    productPrice: finalPrice,
+                                                    selectedEnergization: selected,
+                                                    selectedOption: radioSelected,
+                                                    energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
+                                                })
+                                                toast.success("Added to cart!")
+                                                router.push("/checkout")
+                                            } else {
+                                                toast.error("Please fill all the fields")
+                                            }
                                         } else {
-                                            toast.error("Please fill all the fields")
-                                        }
-                                    } else {
-                                        addItem({
-                                            ...product,
-                                            productPrice: finalPrice,
-                                            selectedEnergization: selected,
-                                            energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
-                                        })
-                                        toast.success("Added to cart!")
-                                    }
-                                }}
-                                className="mt-4 w-full rounded-lg border border-yellow-600 px-6 py-3 font-semibold text-yellow-600 transition duration-300 hover:bg-yellow-500 hover:shadow-md"
-                            >
-                                Add to Cart
-                            </button>
-                            <button
-                                onClick={() => {
-                                    if (selected?.isHaveForm) {
-                                        if (validateForm()) {
                                             addItem({
                                                 ...product,
                                                 productPrice: finalPrice,
                                                 selectedEnergization: selected,
+                                                selectedOption: radioSelected,
                                                 energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
                                             })
                                             toast.success("Added to cart!")
                                             router.push("/checkout")
-                                        } else {
-                                            toast.error("Please fill all the fields")
                                         }
-                                    } else {
-                                        addItem({
-                                            ...product,
-                                            productPrice: finalPrice,
-                                            selectedEnergization: selected,
-                                            energizationForm: selected?.isHaveForm ? formData : null, // store form if needed
-                                        })
-                                        toast.success("Added to cart!")
-                                        router.push("/checkout")
-                                    }
-                                }}
-                                className="mt-4 w-full rounded-lg bg-yellow-600 px-6 py-3 font-semibold text-white transition duration-300 hover:bg-yellow-500 hover:shadow-md"
-                            >
-                                Buy now
-                            </button>
+                                    }}
+                                    className="w-full rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 px-6 py-3 font-semibold text-white transition duration-300 hover:bg-yellow-500 hover:shadow-md"
+                                >
+                                    Buy now
+                                </button>
+                            </div>
                         </div>
                     )}
                     <div className="mt-6">
                         {product.productFeatures && product.productFeatures.length > 0 ? (
                             (() => {
                                 let htmlContent = ""
-
                                 try {
                                     const parsed = JSON.parse(product.productFeatures[0])
-                                    // If it's an array (like ["<p>...</p>"]), take the first or join all
                                     htmlContent = Array.isArray(parsed) ? parsed.join("") : parsed
                                 } catch {
-                                    // If already HTML string
                                     htmlContent = product.productFeatures[0]
                                 }
 
@@ -340,47 +396,11 @@ function ProductDetails() {
                     </div>
                 </div>
             </section>
-            {/* Share Popup */}
-            {showShare && (
-                <div className="bg-opacity-40 fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-                    <div className="animate-fadeIn w-80 rounded-xl border-2 border-yellow-500 bg-white p-6 shadow-lg">
-                        <h2 className="mb-3 text-lg font-bold text-yellow-600">Share this Rudraksha</h2>
-                        <div className="mb-4 flex items-center">
-                            <input id="pageLink" type="text" value={window.location.href} readOnly className="flex-1 rounded-l-lg border px-2 py-1 text-sm" />
-                            <button onClick={copyLink} className="rounded-r-lg bg-yellow-500 px-3 py-1 text-white">
-                                Copy
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-3 gap-3 text-center">
-                            <a
-                                href="https://api.whatsapp.com/send?text=https://yourwebsite.com/product/red-jasper"
-                                target="_blank"
-                                className="rounded-lg bg-green-500 py-2 text-white hover:opacity-90"
-                            >
-                                WhatsApp
-                            </a>
-                            <a
-                                href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com/product/red-jasper"
-                                target="_blank"
-                                className="rounded-lg bg-blue-600 py-2 text-white hover:opacity-90"
-                            >
-                                Facebook
-                            </a>
-                            <a href="https://www.instagram.com/" target="_blank" className="rounded-lg bg-pink-500 py-2 text-white hover:opacity-90">
-                                Instagram
-                            </a>
-                        </div>
-                        <button onClick={() => setShowShare(false)} className="mt-5 w-full rounded-lg bg-yellow-600 py-2 font-semibold text-white">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
 
             <div className="mx-auto mt-10 max-w-7xl px-4 sm:px-6">
                 <div className="mt-8">
                     <Tabs defaultValue="about" className="w-full">
-                        <TabsList className="flex flex-wrap justify-start gap-2 rounded-2xl p-1">
+                        <TabsList className="flex h-12 w-full flex-wrap justify-start gap-2 rounded-full p-1">
                             {[
                                 { value: "about", label: "About Product" },
                                 { value: "benefits", label: "Benefits" },
@@ -392,7 +412,7 @@ function ProductDetails() {
                                 <TabsTrigger
                                     key={tab.value}
                                     value={tab.value}
-                                    className="relative rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-white/70 data-[state=active]:bg-yellow-500 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600"
+                                    className="relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-white/70 data-[state=active]:bg-yellow-500 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=inactive]:text-gray-600"
                                 >
                                     {tab.label}
                                     <motion.div

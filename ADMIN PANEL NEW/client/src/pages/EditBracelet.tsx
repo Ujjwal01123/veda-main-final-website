@@ -16,6 +16,10 @@ interface BraceletData {
   _id: string;
   productName: string;
   stock: number;
+  shortDescription: "";
+  metaTitle: "";
+  metaKeywords: "";
+  metaDescription: "";
   productPrice: number;
   productDiscount: number;
   productImage: string[];
@@ -61,6 +65,10 @@ export default function EditBracelet() {
     newImages: [] as File[],
     shopifyLink: "",
     youtubeLink: "",
+    shortDescription: "",
+    metaTitle: "",
+    metaKeywords: "",
+    metaDescription: "",
   });
 
   // const normalizeHtml = (value: any): string => {
@@ -78,71 +86,69 @@ export default function EditBracelet() {
   //   return "";
   // };
   const normalizeHtml = (value: any): string => {
-  if (!value) return "";
+    if (!value) return "";
 
-  let html = value;
+    let html = value;
 
-  // 🧩 1️⃣ If array → take the first element
-  if (Array.isArray(html)) html = html[0];
+    // 🧩 1️⃣ If array → take the first element
+    if (Array.isArray(html)) html = html[0];
 
-  // 🧩 2️⃣ If object → convert to string
-  if (typeof html === "object") html = JSON.stringify(html);
+    // 🧩 2️⃣ If object → convert to string
+    if (typeof html === "object") html = JSON.stringify(html);
 
-  // 🧩 3️⃣ Decode escaped HTML entities (e.g., \u003C → <)
-  if (typeof html === "string") {
-    html = html
-      .replace(/\\u003C/g, "<")
-      .replace(/\\u003E/g, ">")
-      .replace(/\\u0026/g, "&")
-      .replace(/\\\"/g, '"')
-      .replace(/\\\\/g, "\\");
-  }
-
-  html = html.trim();
-
-  // 🧩 4️⃣ Try to parse JSON-like strings
-  // Examples: "[\"<p>hello</p>\"]", "\"<p>hello</p>\""
-  if (/^\s*(\[|\{)?".*"\}?/.test(html)) {
-    try {
-      const parsed = JSON.parse(html);
-      if (Array.isArray(parsed)) {
-        html = parsed[0] || "";
-      } else if (typeof parsed === "string") {
-        html = parsed;
-      } else if (parsed && typeof parsed === "object") {
-        html = Object.values(parsed)[0] as string;
-      }
-    } catch {
-      // fallback: continue cleanup
+    // 🧩 3️⃣ Decode escaped HTML entities (e.g., \u003C → <)
+    if (typeof html === "string") {
+      html = html
+        .replace(/\\u003C/g, "<")
+        .replace(/\\u003E/g, ">")
+        .replace(/\\u0026/g, "&")
+        .replace(/\\\"/g, '"')
+        .replace(/\\\\/g, "\\");
     }
-  }
 
-  // 🧩 5️⃣ Remove wrapping quotes, brackets, or stray commas
-  html = html
-    .trim()
-    .replace(/^"+|"+$/g, "") // remove leading/trailing double quotes
-    .replace(/^'+|'+$/g, "") // remove single quotes
-    .replace(/^`+|`+$/g, "") // remove backticks
-    .replace(/^\[|\]$/g, "") // remove square brackets
-    .replace(/^,|,$/g, "") // remove commas
-    .trim();
+    html = html.trim();
 
-  // 🧩 6️⃣ If the result is still something like "content" or ""content"",
-  // strip those inner quotes too.
-  if (/^"+.*"+$/.test(html)) {
-    html = html.replace(/^"+|"+$/g, "").trim();
-  }
-  if (/^'+.*'+$/.test(html)) {
-    html = html.replace(/^'+|'+$/g, "").trim();
-  }
+    // 🧩 4️⃣ Try to parse JSON-like strings
+    // Examples: "[\"<p>hello</p>\"]", "\"<p>hello</p>\""
+    if (/^\s*(\[|\{)?".*"\}?/.test(html)) {
+      try {
+        const parsed = JSON.parse(html);
+        if (Array.isArray(parsed)) {
+          html = parsed[0] || "";
+        } else if (typeof parsed === "string") {
+          html = parsed;
+        } else if (parsed && typeof parsed === "object") {
+          html = Object.values(parsed)[0] as string;
+        }
+      } catch {
+        // fallback: continue cleanup
+      }
+    }
 
-  // 🧩 7️⃣ Remove the literal word "content" if accidentally saved as just that
-  if (html.toLowerCase().trim() === "content") html = "";
+    // 🧩 5️⃣ Remove wrapping quotes, brackets, or stray commas
+    html = html
+      .trim()
+      .replace(/^"+|"+$/g, "") // remove leading/trailing double quotes
+      .replace(/^'+|'+$/g, "") // remove single quotes
+      .replace(/^`+|`+$/g, "") // remove backticks
+      .replace(/^\[|\]$/g, "") // remove square brackets
+      .replace(/^,|,$/g, "") // remove commas
+      .trim();
 
-  return html.trim();
-};
+    // 🧩 6️⃣ If the result is still something like "content" or ""content"",
+    // strip those inner quotes too.
+    if (/^"+.*"+$/.test(html)) {
+      html = html.replace(/^"+|"+$/g, "").trim();
+    }
+    if (/^'+.*'+$/.test(html)) {
+      html = html.replace(/^'+|'+$/g, "").trim();
+    }
 
+    // 🧩 7️⃣ Remove the literal word "content" if accidentally saved as just that
+    if (html.toLowerCase().trim() === "content") html = "";
 
+    return html.trim();
+  };
 
   // Fetch bracelet data
   useEffect(() => {
@@ -153,6 +159,10 @@ export default function EditBracelet() {
         setBracelet(data);
         setFormData({
           productName: data.productName,
+          shortDescription: data.shortDescription || "",
+          metaTitle: data.metaTitle || "",
+          metaKeywords: data.metaKeywords || "",
+          metaDescription: data.metaDescription || "",
           stock: data.stock,
           productPrice: data.productPrice,
           productDiscount: data.productDiscount,
@@ -236,6 +246,10 @@ export default function EditBracelet() {
     try {
       const data = new FormData();
       data.append("productName", formData.productName);
+      data.append("shortDescription", formData.shortDescription);
+      data.append("metaTitle", formData.metaTitle);
+      data.append("metaKeywords", formData.metaKeywords);
+      data.append("metaDescription", formData.metaDescription);
       data.append("stock", formData.stock.toString());
       data.append("productPrice", formData.productPrice.toString());
       data.append("productDiscount", formData.productDiscount.toString());
@@ -371,6 +385,72 @@ export default function EditBracelet() {
                           productDiscount: Number(e.target.value),
                         })
                       }
+                    />
+                  </div>
+                </div>
+
+                <div className="col-span-2">
+                  <Label>Short Description</Label>
+                  <Input
+                    name="shortDescription"
+                    value={formData.shortDescription}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        shortDescription: e.target.value,
+                      })
+                    }
+                    placeholder="A brief summary for listing or preview."
+                  />
+                </div>
+
+                {/* SEO Section */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-orange-600 border-b pb-2">
+                    🔍 SEO Information
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                      <Label>Meta Title</Label>
+                      <Input
+                        name="metaTitle"
+                        value={formData.metaTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            metaTitle: e.target.value,
+                          })
+                        }
+                        placeholder="Best Puja for Peace and Prosperity"
+                      />
+                    </div>
+                    <div>
+                      <Label>Meta Keywords</Label>
+                      <Input
+                        name="metaKeywords"
+                        value={formData.metaKeywords}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            metaKeywords: e.target.value,
+                          })
+                        }
+                        placeholder="peace, prosperity, hindu puja"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Meta Description</Label>
+                    <Input
+                      name="metaDescription"
+                      value={formData.metaDescription}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          metaDescription: e.target.value,
+                        })
+                      }
+                      placeholder="A detailed SEO-friendly description for search engines."
                     />
                   </div>
                 </div>

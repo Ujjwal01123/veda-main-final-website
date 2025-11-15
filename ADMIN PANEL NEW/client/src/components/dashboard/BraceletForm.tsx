@@ -57,6 +57,10 @@ export default function AddBraceletForm() {
     images: [] as File[],
     shopifyLink: "",
     youtubeLink: "",
+    metaTitle: "",
+    metaKeywords: "",
+    metaDescription: "",
+    shortDescription: "",
   });
 
   // ---------- Handle Array Change ----------
@@ -119,6 +123,10 @@ export default function AddBraceletForm() {
       data.append("certificates", JSON.stringify(formData.certificates));
       data.append("shopifyLink", formData.shopifyLink);
       data.append("youtubeLink", formData.youtubeLink);
+      data.append("shortDescription", formData.shortDescription);
+      data.append("metaTitle", formData.metaTitle);
+      data.append("metaDescription", formData.metaDescription);
+      data.append("metaKeywords", formData.metaKeywords);
 
       formData.images.forEach((file) => data.append("image", file));
 
@@ -152,390 +160,483 @@ export default function AddBraceletForm() {
 
   return (
     <>
-      {/* ✅ Sidebar */}
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      <div className="flex min-h-screen">
+        {/* LEFT SIDEBAR (fixed on desktop, drawer on mobile) */}
+        <div className="hidden md:block w-64 border-r bg-white shadow-sm">
+          {/* ✅ Sidebar */}
+          <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        </div>
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/20 p-4 ml-10">
-        <div className="max-w-5xl mx-auto">
-          <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm">
-            <CardHeader className="pb-6">
-              <CardTitle className="text-foreground flex items-center gap-3 text-2xl font-semibold">
-                <div className="p-2 rounded-lg bg-gradient-spiritual text-spiritual-foreground shadow-spiritual">
-                  <Upload className="w-6 h-6" />
-                </div>
-                Add Bracelet
-              </CardTitle>
-              <p className="text-muted-foreground mt-2">
-                Fill in details to create a new bracelet product.
-              </p>
-            </CardHeader>
+        {/* MOBILE SIDEBAR SLIDE-IN */}
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
-            <CardContent className="space-y-8">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Basic Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label>Product Name *</Label>
-                    <Input
-                      value={formData.productName}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          productName: e.target.value,
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Stock *</Label>
-                    <Input
-                      type="number"
-                      value={formData.stock}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          stock: Number(e.target.value),
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Price *</Label>
-                    <Input
-                      type="number"
-                      value={formData.productPrice}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          productPrice: Number(e.target.value),
-                        }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Discount (%)</Label>
-                    <Input
-                      type="number"
-                      value={formData.productDiscount}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          productDiscount: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  </div>
+        {/* RIGHT CONTENT */}
+        <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
+          {/* 👇 YOUR PAGE CONTENT GOES INSIDE HERE */}
 
-                  {/* Shopify / YouTube Links */}
-                  <div className="space-y-2">
-                    <Label>Shopify Link</Label>
-                    <Input
-                      type="url"
-                      placeholder="https://yourshopifylink.com"
-                      value={formData.shopifyLink}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          shopifyLink: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>YouTube Video Link</Label>
-                    <Input
-                      type="url"
-                      placeholder="https://youtube.com/yourvideo"
-                      value={formData.youtubeLink}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          youtubeLink: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-
-                  {/* Image Upload */}
-                  <div className="md:col-span-2 space-y-2">
-                    <Label>Upload Images</Label>
-                    <Input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                    />
-                    <div className="flex flex-wrap gap-3 mt-2">
-                      {formData.images.map((img, i) => (
-                        <div
-                          key={i}
-                          className="relative border rounded-md p-2 shadow-sm"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => removeSelectedImage(i)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                          <p className="text-sm">{img.name}</p>
-                        </div>
-                      ))}
+          <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/20 p-4 ml-10">
+            <div className="max-w-5xl mx-auto">
+              <Card className="bg-gradient-card border-border/50 shadow-card backdrop-blur-sm">
+                <CardHeader className="pb-6">
+                  <CardTitle className="text-foreground flex items-center gap-3 text-2xl font-semibold">
+                    <div className="p-2 rounded-lg bg-gradient-spiritual text-spiritual-foreground shadow-spiritual">
+                      <Upload className="w-6 h-6" />
                     </div>
-                  </div>
-                </div>
+                    Add Bracelet
+                  </CardTitle>
+                  <p className="text-muted-foreground mt-2">
+                    Fill in details to create a new bracelet product.
+                  </p>
+                </CardHeader>
 
-                <Separator className="bg-orange-200" />
-
-                {/* ✅ Rich Text Sections */}
-                {[
-                  { key: "productAbout", label: "About" },
-                  { key: "productFeatures", label: "Features" },
-                  { key: "productBenefits", label: "Benefits" },
-                  { key: "productFaqs", label: "FAQs" },
-                  { key: "productShipping", label: "Shipping" },
-                ].map(({ key, label }) => (
-                  <div key={key} className="space-y-2">
-                    <Label className="capitalize">{label}</Label>
-                    <TiptapEditor
-                      value={
-                        (
-                          formData[key as keyof typeof formData] as string[]
-                        )[0] || ""
-                      }
-                      onChange={(html) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          [key]: [html],
-                        }))
-                      }
-                      placeholder={`Write ${label.toLowerCase()} details...`}
-                    />
-                  </div>
-                ))}
-
-                <Separator className="bg-orange-200" />
-
-                {/* Energization Section */}
-                <div>
-                  <Label className="text-lg font-semibold">Energization</Label>
-                  {formData.energization.map((item, i) => (
-                    <div
-                      key={i}
-                      className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 items-center"
-                    >
-                      <Input
-                        placeholder="Title"
-                        value={item.title}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "energization",
-                            i,
-                            "title",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <Input
-                        type="number"
-                        placeholder="Price"
-                        value={item.price}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "energization",
-                            i,
-                            "price",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                      <div className="flex items-center gap-2">
-                        <Label className="text-sm">Have Form?</Label>
-                        <input
-                          type="checkbox"
-                          checked={item.isHaveForm}
+                <CardContent className="space-y-8">
+                  <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Basic Info */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label>Product Name *</Label>
+                        <Input
+                          value={formData.productName}
                           onChange={(e) =>
-                            handleArrayChange(
-                              "energization",
-                              i,
-                              "isHaveForm",
-                              e.target.checked
-                            )
+                            setFormData((prev) => ({
+                              ...prev,
+                              productName: e.target.value,
+                            }))
+                          }
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Stock *</Label>
+                        <Input
+                          type="number"
+                          value={formData.stock}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              stock: Number(e.target.value),
+                            }))
+                          }
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Price *</Label>
+                        <Input
+                          type="number"
+                          value={formData.productPrice}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              productPrice: Number(e.target.value),
+                            }))
+                          }
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Discount (%)</Label>
+                        <Input
+                          type="number"
+                          value={formData.productDiscount}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              productDiscount: Number(e.target.value),
+                            }))
                           }
                         />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => removeArrayItem("energization", i)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      </div>
+
+                      {/* Shopify / YouTube Links */}
+                      <div className="space-y-2">
+                        <Label>Shopify Link</Label>
+                        <Input
+                          type="url"
+                          placeholder="https://yourshopifylink.com"
+                          value={formData.shopifyLink}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              shopifyLink: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>YouTube Video Link</Label>
+                        <Input
+                          type="url"
+                          placeholder="https://youtube.com/yourvideo"
+                          value={formData.youtubeLink}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              youtubeLink: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+
+                      {/* Image Upload */}
+                      <div className="md:col-span-2 space-y-2">
+                        <Label>Upload Images</Label>
+                        <Input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                        <div className="flex flex-wrap gap-3 mt-2">
+                          {formData.images.map((img, i) => (
+                            <div
+                              key={i}
+                              className="relative border rounded-md p-2 shadow-sm"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => removeSelectedImage(i)}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                              <p className="text-sm">{img.name}</p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  ))}
-                  <Button
-                    type="button"
-                    className="mt-3"
-                    onClick={() =>
-                      addArrayItem("energization", {
-                        title: "",
-                        price: 0,
-                        isHaveForm: false,
-                      })
-                    }
-                  >
-                    <Plus className="w-4 h-4 mr-2" /> Add Energization
-                  </Button>
-                </div>
 
-                <Separator className="bg-orange-200" />
+                    <Separator className="bg-orange-200" />
 
-                {/* Sizes Section */}
-                <div>
-                  <Label className="text-lg font-semibold">Sizes</Label>
-                  {formData.sizes.map((size, i) => (
-                    <div
-                      key={i}
-                      className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 items-center"
-                    >
-                      <Input
-                        placeholder="Size"
-                        value={size.size}
-                        onChange={(e) =>
-                          handleArrayChange("sizes", i, "size", e.target.value)
-                        }
-                      />
-                      <Input
-                        type="number"
-                        placeholder="Price"
-                        value={size.price}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "sizes",
-                            i,
-                            "price",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                      <Input
-                        type="number"
-                        placeholder="Stock"
-                        value={size.stock}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "sizes",
-                            i,
-                            "stock",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
+                    {/* ✅ Rich Text Sections */}
+                    {[
+                      { key: "productAbout", label: "About" },
+                      { key: "productFeatures", label: "Features" },
+                      { key: "productBenefits", label: "Benefits" },
+                      { key: "productFaqs", label: "FAQs" },
+                      { key: "productShipping", label: "Shipping" },
+                    ].map(({ key, label }) => (
+                      <div key={key} className="space-y-2">
+                        <Label className="capitalize">{label}</Label>
+                        <TiptapEditor
+                          value={
+                            (
+                              formData[key as keyof typeof formData] as string[]
+                            )[0] || ""
+                          }
+                          onChange={(html) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              [key]: [html],
+                            }))
+                          }
+                          placeholder={`Write ${label.toLowerCase()} details...`}
+                        />
+                      </div>
+                    ))}
+
+                    <Separator className="bg-orange-200" />
+
+                    {/* Energization Section */}
+                    <div>
+                      <Label className="text-lg font-semibold">
+                        Energization
+                      </Label>
+                      {formData.energization.map((item, i) => (
+                        <div
+                          key={i}
+                          className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 items-center"
+                        >
+                          <Input
+                            placeholder="Title"
+                            value={item.title}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "energization",
+                                i,
+                                "title",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            value={item.price}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "energization",
+                                i,
+                                "price",
+                                Number(e.target.value)
+                              )
+                            }
+                          />
+                          <div className="flex items-center gap-2">
+                            <Label className="text-sm">Have Form?</Label>
+                            <input
+                              type="checkbox"
+                              checked={item.isHaveForm}
+                              onChange={(e) =>
+                                handleArrayChange(
+                                  "energization",
+                                  i,
+                                  "isHaveForm",
+                                  e.target.checked
+                                )
+                              }
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => removeArrayItem("energization", i)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                       <Button
                         type="button"
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => removeArrayItem("sizes", i)}
+                        className="mt-3"
+                        onClick={() =>
+                          addArrayItem("energization", {
+                            title: "",
+                            price: 0,
+                            isHaveForm: false,
+                          })
+                        }
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Plus className="w-4 h-4 mr-2" /> Add Energization
                       </Button>
                     </div>
-                  ))}
-                  <Button
-                    type="button"
-                    className="mt-3"
-                    onClick={() =>
-                      addArrayItem("sizes", { size: "", price: 0, stock: 0 })
-                    }
-                  >
-                    <Plus className="w-4 h-4 mr-2" /> Add Size
-                  </Button>
-                </div>
 
-                <Separator className="bg-orange-200" />
+                    <Separator className="bg-orange-200" />
 
-                {/* Certificates Section */}
-                <div>
-                  <Label className="text-lg font-semibold">Certificates</Label>
-                  {formData.certificates.map((cert, i) => (
-                    <div
-                      key={i}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 items-center"
-                    >
-                      <Input
-                        placeholder="Certificate Type"
-                        value={cert.type}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "certificates",
-                            i,
-                            "type",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <Input
-                        type="number"
-                        placeholder="Price"
-                        value={cert.price}
-                        onChange={(e) =>
-                          handleArrayChange(
-                            "certificates",
-                            i,
-                            "price",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
+                    {/* Sizes Section */}
+                    <div>
+                      <Label className="text-lg font-semibold">Sizes</Label>
+                      {formData.sizes.map((size, i) => (
+                        <div
+                          key={i}
+                          className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 items-center"
+                        >
+                          <Input
+                            placeholder="Size"
+                            value={size.size}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "sizes",
+                                i,
+                                "size",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            value={size.price}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "sizes",
+                                i,
+                                "price",
+                                Number(e.target.value)
+                              )
+                            }
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Stock"
+                            value={size.stock}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "sizes",
+                                i,
+                                "stock",
+                                Number(e.target.value)
+                              )
+                            }
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => removeArrayItem("sizes", i)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
                       <Button
                         type="button"
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => removeArrayItem("certificates", i)}
+                        className="mt-3"
+                        onClick={() =>
+                          addArrayItem("sizes", {
+                            size: "",
+                            price: 0,
+                            stock: 0,
+                          })
+                        }
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Plus className="w-4 h-4 mr-2" /> Add Size
                       </Button>
                     </div>
-                  ))}
-                  <Button
-                    type="button"
-                    className="mt-3"
-                    onClick={() =>
-                      addArrayItem("certificates", { type: "", price: 0 })
-                    }
-                  >
-                    <Plus className="w-4 h-4 mr-2" /> Add Certificate
-                  </Button>
-                </div>
 
-                <Separator className="bg-orange-200" />
+                    <Separator className="bg-orange-200" />
 
-                {/* Submit Buttons */}
-                <div className="flex gap-4">
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-gradient-spiritual text-spiritual-foreground py-4 font-medium"
-                  >
-                    <Save className="w-4 h-4 mr-2" />{" "}
-                    {loading ? "Saving..." : "Save Bracelet"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+                    {/* Certificates Section */}
+                    <div>
+                      <Label className="text-lg font-semibold">
+                        Certificates
+                      </Label>
+                      {formData.certificates.map((cert, i) => (
+                        <div
+                          key={i}
+                          className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 items-center"
+                        >
+                          <Input
+                            placeholder="Certificate Type"
+                            value={cert.type}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "certificates",
+                                i,
+                                "type",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            value={cert.price}
+                            onChange={(e) =>
+                              handleArrayChange(
+                                "certificates",
+                                i,
+                                "price",
+                                Number(e.target.value)
+                              )
+                            }
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => removeArrayItem("certificates", i)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        className="mt-3"
+                        onClick={() =>
+                          addArrayItem("certificates", { type: "", price: 0 })
+                        }
+                      >
+                        <Plus className="w-4 h-4 mr-2" /> Add Certificate
+                      </Button>
+                    </div>
+
+                    {/* Short Description */}
+                    <div className="space-y-2 md:col-span-2">
+                      <Label>Short Description</Label>
+                      <Input
+                        value={formData.shortDescription}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            shortDescription: e.target.value,
+                          }))
+                        }
+                        placeholder="Brief overview (1-2 lines)"
+                      />
+                    </div>
+
+                    {/* --- SEO SECTION --- */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-gradient-spiritual"></div>
+                        SEO Details
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label>Meta Title</Label>
+                          <Input
+                            value={formData.metaTitle}
+                            onChange={(e) =>
+                              setFormData((p) => ({
+                                ...p,
+                                metaTitle: e.target.value,
+                              }))
+                            }
+                            placeholder="SEO title for search engines"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Meta Keywords</Label>
+                          <Input
+                            value={formData.metaKeywords}
+                            onChange={(e) =>
+                              setFormData((p) => ({
+                                ...p,
+                                metaKeywords: e.target.value,
+                              }))
+                            }
+                            placeholder="e.g., 1 Mukhi Rudraksha,etc"
+                          />
+                        </div>
+
+                        <div className="space-y-2 md:col-span-2">
+                          <Label>Meta Description</Label>
+                          <Input
+                            as="textarea"
+                            value={formData.metaDescription}
+                            onChange={(e) =>
+                              setFormData((p) => ({
+                                ...p,
+                                metaDescription: e.target.value,
+                              }))
+                            }
+                            placeholder="Short description (150–160 characters) for SEO"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator className="bg-orange-200" />
+
+                    {/* Submit Buttons */}
+                    <div className="flex gap-4">
+                      <Button
+                        type="submit"
+                        disabled={loading}
+                        className="flex-1 bg-gradient-spiritual text-spiritual-foreground py-4 font-medium"
+                      >
+                        <Save className="w-4 h-4 mr-2" />{" "}
+                        {loading ? "Saving..." : "Save Bracelet"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => navigate("/dashboard")}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
     </>

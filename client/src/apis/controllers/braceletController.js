@@ -8,13 +8,13 @@ export const getBracelet = () => {
     return axiosIntance.get("/product/bracelet")
 }
 
-// export const deleteBracelet = (id) => {
-//     return axiosIntance.delete(`/product/bracelet/${id}`)
-// }
+export const deleteBracelet = (id) => {
+    return axiosIntance.delete(`/product/bracelet/${id}`)
+}
 
-// export const updateBracelet = (id, data) => {
-//     return axiosIntance.put(`/product/bracelet/${id}`, data)
-// }
+export const updateBracelet = (id, data) => {
+    return axiosIntance.put(`/product/bracelet/${id}`, data)
+}
 
 export const getBraceletById = (id) => {
     return axiosIntance.get(`/product/bracelet/${id}`)

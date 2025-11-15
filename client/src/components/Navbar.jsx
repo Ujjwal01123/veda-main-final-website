@@ -107,14 +107,16 @@ export default function Navbar() {
                                     </li>
                                     <li>
                                         <Collapsible>
+                                            <Link href="/yagya-puja">
                                             <CollapsibleTrigger className="flex items-center gap-1">
-                                                All Pujas <FaAngleDown />
+                                                Yagya|Puja <FaAngleDown />
                                             </CollapsibleTrigger>
+                                            </Link>
                                             <CollapsibleContent>
                                                 <ul className="grid gap-2 px-4">
-                                                    <li>
-                                                        <Link href="/yagya-puja">All Pujas</Link>
-                                                    </li>
+                                                    {/* <li>
+                                                        <Link href="/yagya-puja">Yagya|Puja</Link>
+                                                    </li> */}
                                                     <li>
                                                         <Link href="/vedic-yagya">Vedic Yagya</Link>
                                                     </li>
@@ -204,13 +206,15 @@ export default function Navbar() {
                     </li>
 
                     <li className="group relative">
-                        <button className="flex items-center gap-1 px-2 hover:text-yellow-600">
-                            All Pujas <FaAngleDown />
+                        <Link href="/yagya-puja">
+                        <button className="flex items-center gap-1 px-2 hover:text-yellow-600 cursor-pointer">
+                            Yagya|Puja <FaAngleDown />
                         </button>
+                        </Link>
                         <div className="dropdown absolute top-full left-0 z-10 hidden w-58 rounded-md border bg-white shadow-lg group-hover:block">
-                            <Link href="/yagya-puja" className="block px-4 py-2 hover:bg-yellow-100">
-                                All Pujas
-                            </Link>
+                            {/* <Link href="/yagya-puja" className="block px-4 py-2 hover:bg-yellow-100">
+                                Yagya|Puja
+                            </Link> */}
                             {/* <Link href="/yagya-puja" className="block px-4 py-2 hover:bg-yellow-100">
                                 Exlore All
                             </Link> */}

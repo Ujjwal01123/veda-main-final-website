@@ -6,6 +6,9 @@ const asyncHandler = require("../utils/asyncHandler.js");
 // -------------------- ADD BRACELET --------------------
 exports.addBracelet = asyncHandler(async (req, res) => {
   const { body } = req;
+
+  const { shortDescription, metaTitle, metaDescription, metaKeywords } = body;
+
   const energization = body?.energization ? JSON.parse(body.energization) : [];
   const sizes = body?.sizes ? JSON.parse(body.sizes) : [];
   const certificates = body?.certificates ? JSON.parse(body.certificates) : [];
@@ -20,12 +23,17 @@ exports.addBracelet = asyncHandler(async (req, res) => {
     : [];
 
   const product = new Bracelet({
+    shortDescription,
+    metaTitle,
+    metaDescription,
+    metaKeywords,
     ...body,
     energization,
     sizes,
     certificates,
     productImage: images,
     productPath: imagesPath,
+
     shopifyLink: body.shopifyLink || "",
     youtubeLink: body.youtubeLink || "",
   });
@@ -111,6 +119,10 @@ exports.updateBracelet = asyncHandler(async (req, res) => {
     productFeatures,
     productBenefits,
     productFaqs,
+    shortDescription,
+    metaTitle,
+    metaDescription,
+    metaKeywords,
     productShipping,
     energization,
     sizes,

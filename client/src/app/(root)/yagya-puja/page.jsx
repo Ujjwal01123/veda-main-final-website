@@ -12,7 +12,6 @@ function Puja() {
             <Filter />
 
             <Reviev />
-            <Footer />
         </div>
     )
 }

@@ -46,10 +46,10 @@ const App = () => {
         <>
             <YagyaHeroSection />
             <YagyaAboutSection />
-            <YagyaTypesSection />
+
             {/* <PricingSection /> */}
             {/* cards */}
-            <section id="book" className="bg-base-50 py-24">
+            <section id="book" className="bg-base-50 py-10">
                 <div className="mx-auto max-w-2xl text-center">
                     <h2 className="font-serif text-4xl font-bold text-neutral-900">Types of Yagya You Can Book</h2>
                     {/* <p className="mt-4 text-lg text-neutral-800">Choose the sacred recitation that aligns with your needs, or let our astrologers guide you.</p> */}
@@ -92,6 +92,7 @@ const App = () => {
             </section>
             {/*  */}
             {/*  */}
+            <YagyaTypesSection />
             <HowItWorksSection />
             <ForWhomSection />
             <TrustAuthenticitySection />

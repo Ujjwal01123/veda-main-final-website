@@ -11,6 +11,7 @@ const {
   restorePuja,
   getDeletedPujas,
   getPujaByCategories,
+  getPujaMultipleByCategories,
   getUpcomingPuja,
   hardDeletePujaById,
 } = require("../controllers/pujaControllers");
@@ -31,6 +32,7 @@ const upload = multer({ storage });
 // Routes
 router.get("/all", getAllPujas);
 router.get("/upcomingPuja", getUpcomingPuja);
+router.post("/getPujaByCategory/multiple", getPujaMultipleByCategories);
 router.get("/getPujaByCategory/:categoryId", getPujaByCategories);
 router.get("/deleted", getDeletedPujas); // 🆕 get deleted pujas
 router.post("/", upload.single("image"), createNewPuja);

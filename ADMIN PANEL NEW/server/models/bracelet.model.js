@@ -30,6 +30,26 @@ const braceletSchema = new mongoose.Schema(
       },
     ],
 
+    shortDescription: { type: [String] },
+    // shortDescription: {
+    //   type: [String], // limit for meta/preview usage
+    // },
+    // ✅ SEO fields
+    metaTitle: {
+      type: String,
+      trim: true,
+      maxlength: 70,
+    },
+    metaDescription: {
+      type: String,
+      trim: true,
+      maxlength: 160,
+    },
+    metaKeywords: {
+      type: [String], // e.g., ["Ganesh Puja", "Hindu rituals"]
+      default: [],
+    },
+
     shopifyLink: { type: String, default: "" }, // <-- added
     youtubeLink: { type: String, default: "" }, // <-- added
 

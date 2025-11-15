@@ -27,8 +27,9 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
   // ✅ Collapsible state
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
     // puja: false,
-    add:false,
-    manage:false,
+    add: false,
+    manage: false,
+    offer: false,
     // blog: false,
   });
 
@@ -192,6 +193,46 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
             )}
           </div>
 
+          <div>
+            <Button
+              variant="ghost"
+              className="w-full justify-between gap-3"
+              onClick={() => toggleMenu("offer")}
+            >
+              <span className="flex items-center gap-3">
+                <BookOpen className="w-4 h-4" /> Manage Offers
+              </span>
+              {openMenus.offer ? (
+                <ChevronDown className="w-4 h-4" />
+              ) : (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Button>
+            {openMenus.offer && (
+              <div className="ml-6 mt-1 space-y-1">
+                <SidebarLink
+                  to="/rudraksha/offers"
+                  label="✨ manage Rudraksha"
+                  active={isActive("/rudraksha/offers")}
+                  setOpen={setOpen}
+                />
+                <SidebarLink
+                  to="/bracelet/offers"
+                  label="✨ manage Bracelet"
+                  active={isActive("/bracelet/offers")}
+                  setOpen={setOpen}
+                />
+                {/* tempporary */}
+                {/* <SidebarLink
+                  to="/dashboard/manage-gemstones"
+                  label="✨ manage Gemstone"
+                  active={isActive("/dashboard/manage-gemstones")}
+                  setOpen={setOpen}
+                /> */}
+              </div>
+            )}
+          </div>
+
           {/* === DROPDOWN SECTION: RUDRAKSHA === */}
           {/* <div>
             <Button
@@ -272,10 +313,15 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
             </Button>
           </Link> */}
 
-          <Link to="/dashboard/manage-product-orders" onClick={() => setOpen(false)}>
+          <Link
+            to="/dashboard/manage-product-orders"
+            onClick={() => setOpen(false)}
+          >
             <Button
               variant={
-                isActive("/dashboard/manage-product-orders") ? "spiritual" : "ghost"
+                isActive("/dashboard/manage-product-orders")
+                  ? "spiritual"
+                  : "ghost"
               }
               className="w-full justify-start gap-3"
             >

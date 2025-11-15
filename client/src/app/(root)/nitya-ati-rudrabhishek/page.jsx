@@ -310,56 +310,7 @@ const NityaAti = () => {
                 </section>
                 {/*  */}
 
-                {/* <section id="testimonials" className="py-24" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/sand-paper.png')" }}>
-                    <div className="container mx-auto px-6">
-                        <div className="mx-auto mb-20 max-w-3xl text-center">
-                            <h2 className="font-serif text-4xl font-bold text-[#4a2c2a] md:text-5xl">Voices of Devotion</h2>
-                            <p className="mt-4 text-lg text-[#854d27]">Hear the heartfelt experiences of devotees who have been touched by the grace of Lord Shiva.</p>
-                            <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500"></div>
-                        </div>
-                        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
-                            <div className="transform rounded-lg bg-[#fcf6f0] p-8 shadow-[8px_8px_16px_#d1c7bc,_-8px_-8px_16px_#ffffff] transition-transform duration-300 hover:scale-105">
-                                <div className="text-center">
-                                    <div className="mb-4 font-serif text-3xl text-orange-600">ॐ</div>
-                                    <p className="font-serif text-lg text-[#6b4a34] italic">
-                                        "Since I started attending the Rudrabhishek online, my life has become more peaceful. Immensely grateful for this opportunity."
-                                    </p>
-                                    <div className="mt-6 flex flex-col items-center">
-                                        <img src="https://i.pravatar.cc/150?u=anjali" alt="Anjali M." className="h-16 w-16 rounded-full object-cover ring-4 ring-yellow-500 ring-offset-2" />
-                                        <p className="mt-3 font-semibold text-[#4a2c2a]">Anjali M.</p>
-                                        <p className="text-sm text-[#854d27]">Pune</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="transform rounded-lg bg-[#fcf6f0] p-8 shadow-[8px_8px_16px_#d1c7bc,_-8px_-8px_16px_#ffffff] transition-transform duration-300 hover:scale-105">
-                                <div className="text-center">
-                                    <div className="mb-4 font-serif text-3xl text-orange-600">ॐ</div>
-                                    <p className="font-serif text-lg text-[#6b4a34] italic">
-                                        "The daily live Yagya is a divine experience. The energy is palpable even through the screen. My family's health has improved. Har Har Mahadev!"
-                                    </p>
-                                    <div className="mt-6 flex flex-col items-center">
-                                        <img src="https://i.pravatar.cc/150?u=rajesh" alt="Rajesh K." className="h-16 w-16 rounded-full object-cover ring-4 ring-yellow-500 ring-offset-2" />
-                                        <p className="mt-3 font-semibold text-[#4a2c2a]">Rajesh K.</p>
-                                        <p className="text-sm text-[#854d27]">Delhi</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="transform rounded-lg bg-[#fcf6f0] p-8 shadow-[8px_8px_16px_#d1c7bc,_-8px_-8px_16px_#ffffff] transition-transform duration-300 hover:scale-105">
-                                <div className="text-center">
-                                    <div className="mb-4 font-serif text-3xl text-orange-600">ॐ</div>
-                                    <p className="font-serif text-lg text-[#6b4a34] italic">
-                                        "Booking was easy and the priests are authentic. I felt a positive shift in my career and finances. A truly blessed service."
-                                    </p>
-                                    <div className="mt-6 flex flex-col items-center">
-                                        <img src="https://i.pravatar.cc/150?u=priya" alt="Priya S." className="h-16 w-16 rounded-full object-cover ring-4 ring-yellow-500 ring-offset-2" />
-                                        <p className="mt-3 font-semibold text-[#4a2c2a]">Priya S.</p>
-                                        <p className="text-sm text-[#854d27]">Bengaluru</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section> */}
+                
 
                 <section id="faq" className="py-24">
                     <div className="container mx-auto max-w-4xl px-6">

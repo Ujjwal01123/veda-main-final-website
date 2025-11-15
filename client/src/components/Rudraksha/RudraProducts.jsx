@@ -24,26 +24,39 @@ export default function RudraProducts() {
 
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 lg:grid-cols-4">
                     {rudraksha?.map((item) => (
-                        <div key={item._id} className="relative overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-105 hover:shadow-xl">
+                        <div key={item._id} className="group relative overflow-hidden rounded-2xl bg-white shadow-md">
                             {/* Make image + text a clickable link */}
                             <Link href={`/rudraksha/${item._id}`}>
-                                <div className="relative h-64 w-full">
+                                <div className="relative overflow-hidden rounded-lg">
+                                    <Image src={item.productImage[0]} alt={item?.productName} width={1000} height={1000} className="h-auto w-full object-cover" loading="lazy" />
+                                    <Image
+                                        src={item.productImage[1]}
+                                        alt={item?.productName}
+                                        width={1000}
+                                        height={1000}
+                                        className="absolute top-0 h-auto w-full object-cover opacity-0 duration-200 group-hover:opacity-100"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                {/* <div className="relative h-64 w-full">
                                     <Image
                                         src={item.productImage[0]}
                                         alt={item?.productName}
                                         width={1000}
                                         height={1000}
-                                        className="h-full w-full object-cover object-bottom transition-transform duration-500"
+                                        className="absolute inset-0 h-full w-full object-cover object-bottom transition-transform duration-500 group-hover:hidden"
+                                    />
+                                    <Image
+                                        src={item.productImage[1]}
+                                        alt={item?.productName}
+                                        width={1000}
+                                        height={1000}
+                                        className="hidden h-full w-full object-cover object-bottom transition-transform duration-500 group-hover:block"
                                     />
                                     <span className="absolute top-3 left-3 rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow">Rudraksha</span>
-                                </div>
+                                </div> */}
                                 <div className="p-4 text-center">
                                     <h3 className="text-lg font-semibold text-gray-800">{item.productName}</h3>
-                                    {/* <div className="flex items-end justify-center gap-2">
-                                        <p className="mt-2 text-xl font-bold text-orange-500">₹{calculateDiscount(item.productPrice, item.productDiscount)}</p>
-                                        <p className="mt-2 text-xl font-semibold text-gray-300 line-through">₹{item.productPrice}</p>
-                                        <p className="text-md mt-2 font-bold text-green-600">{item.productDiscount && item.productDiscount + "% OFF"}</p>
-                                    </div> */}
                                     <div className="flex items-end justify-center gap-2">
                                         {item.productDiscount > 0 ? (
                                             <>
@@ -58,7 +71,6 @@ export default function RudraProducts() {
                                 </div>
                             </Link>
 
-                            {/* Button OUTSIDE the Link so it only adds to cart */}
                             <div className="p-4 pt-0">
                                 {item?.stock <= 0 ? (
                                     <button
@@ -73,7 +85,7 @@ export default function RudraProducts() {
                                 ) : (
                                     <button
                                         onClick={(e) => {
-                                            e.stopPropagation() // stop click bubbling
+                                            e.stopPropagation()
                                             addItem(item)
                                             toast.success("Item added to cart!")
                                         }}
@@ -87,12 +99,6 @@ export default function RudraProducts() {
                     ))}
                 </div>
                 <div></div>
-
-                {/* <div className="mt-10 text-center" data-aos="zoom-in-up">
-                    <button id="viewAllBtn" className="rounded-full bg-orange-600 px-8 py-3 font-bold text-white shadow-md transition-all hover:bg-orange-700">
-                        View All Bracelets
-                    </button>
-                </div> */}
             </div>
         </section>
     )

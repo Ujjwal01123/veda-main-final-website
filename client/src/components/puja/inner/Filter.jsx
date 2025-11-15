@@ -6,7 +6,9 @@ import Link from "next/link"
 import usePuja from "@/hooks/usePuja"
 import { getAllCategories } from "@/apis/controllers/categoriesController"
 
-const serverUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "www.vedastructure.com/api"
+const imgUrl=serverUrl.replace(/\/api[\/]?$/, "")
+console.log("Server URL:", serverUrl)
 
 // Data
 
@@ -65,7 +67,7 @@ function PujaCard({ puja }) {
         <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
             <div className="relative">
                 <img
-                    src={`${serverUrl}${puja.image}`}
+                    src={`${imgUrl}${puja.image}`}
                     alt={puja.title}
                     className="h-48 w-full object-cover"
                     style={{ objectPosition: "center 25%" }}
